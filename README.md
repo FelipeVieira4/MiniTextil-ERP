@@ -1,5 +1,7 @@
-# Template Docker + Springboot
-Template para inicializar um projeto springboot+postgresql com docker.
+# MiniTêxtil - ERP
+
+Para rodar em desenvolvimento:
+docker compose -f docker-compose.dev.yml watch
 
 .env
 ```env

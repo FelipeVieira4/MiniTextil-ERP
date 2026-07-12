@@ -1,0 +1,6 @@
+Operador:
+id (incremental)
+nome
+email(opcional)
+ativo(boolean)
+turno(opcional)

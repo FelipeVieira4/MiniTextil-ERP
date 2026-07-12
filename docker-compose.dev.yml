@@ -4,30 +4,35 @@ services:
   api:
     build: 
       context: .
-      dockerfile: Dockerfile
-    image: minha-app-api:latest
-    container_name: api_service
+      dockerfile: Dockerfile.dev # Aponta para o arquivo de dev
+    container_name: api_service_dev
     depends_on:
       db:
-        condition: service_healthy # Espera o DB estar pronto, não apenas iniciado
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 1G
+        condition: service_healthy
     ports:
       - "8080:8080"
+      - "5005:5005" # Porta de Debug exposta para o Eclipse
+    volumes:
+      - .:/app # Mapeia todo o seu projeto local
+      - ~/.m2:/root/.m2 # Reaproveita o cache do Maven
     environment:
       - DB_HOST=db
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
-    restart: always
     networks:
       - backend
+    # O DEVELOP DEVE FICAR AQUI, DENTRO DA API:
+    develop:
+      watch:
+        - action: sync
+          path: ./target/classes
+          target: /app/target/classes
+        - action: restart
+          path: ./pom.xml
 
   db:
-    image: postgres:15-alpine # Use uma versão específica e a variante 'alpine' (mais leve)
+    image: postgres:15-alpine
     container_name: postgres_db
     environment:
       POSTGRES_DB: ${DB_NAME}
@@ -38,10 +43,8 @@ services:
         limits:
           cpus: '0.5'
           memory: 1G
-    # Removi o mapeamento de porta externa por segurança. 
-    # Use se precisar acessar o DB via DBeaver/Postico:
-    # ports:
-    #   - "6050:5432"
+    ports:
+      - "6050:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -49,7 +52,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    restart: always
     networks:
       - backend
 
