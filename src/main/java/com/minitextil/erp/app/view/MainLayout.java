@@ -1,6 +1,7 @@
 package com.minitextil.erp.app.view;
 
 import com.minitextil.erp.operador.view.CadastroOperador;
+import com.minitextil.erp.operador.view.ConsultaOperador;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.Footer;
@@ -58,6 +59,7 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
         // Automatizar para rodar apartir de uma arquivo .xml ou .json
         SideNavItem operadorModulo = new SideNavItem("Operador");
         operadorModulo.addItem(new SideNavItem("Cadastro Operador", CadastroOperador.class));
+        operadorModulo.addItem(new SideNavItem("Consulta Operadores", ConsultaOperador.class));
         navSideBar.addItem(operadorModulo);
 
         return navSideBar;
