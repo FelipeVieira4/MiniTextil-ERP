@@ -2,6 +2,7 @@ package com.minitextil.erp.operador.view;
 
 import com.minitextil.erp.operador.model.OperadorModel;
 import com.minitextil.erp.operador.repository.OperadorRepository;
+import com.minitextil.erp.operador.service.OperadorService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -31,23 +32,28 @@ public class CadastroOperador extends VerticalLayout {
 
     private final Binder<OperadorModel> binder = new BeanValidationBinder<>(OperadorModel.class);
     private final OperadorRepository repository;
+    private final OperadorService service;
 
     private final IntegerField id = new IntegerField("Código (Deixe vazio para novo)");
     private final TextField nome = new TextField("Nome");
+    private final TextField loginName = new TextField("Nome Login");
     private final EmailField email = new EmailField("Email");
-    private final PasswordField senha = new PasswordField("Senha");
+    private final PasswordField senha = new PasswordField("Nova Senha");
     private final PasswordField confirmarSenha = new PasswordField("Confirmar Senha");
     private final Checkbox ativo = new Checkbox("Ativo");
 
     @Autowired
-    public CadastroOperador(OperadorRepository repository) {
+    public CadastroOperador(OperadorRepository repository,OperadorService service) {
         this.repository = repository;
+        this.service=service;
         
         this.setWidthFull();
         this.setAlignItems(Alignment.CENTER); 
 
         nome.setRequiredIndicatorVisible(true);
         nome.setRequired(true);
+        loginName.setRequiredIndicatorVisible(true);
+        loginName.setRequired(true);
         senha.setRequiredIndicatorVisible(true);
         senha.setRequired(true);
         confirmarSenha.setRequiredIndicatorVisible(true);
@@ -64,9 +70,10 @@ public class CadastroOperador extends VerticalLayout {
         });
 
         binder.forField(nome).bind(OperadorModel::getNome, OperadorModel::setNome);
+        binder.forField(loginName).bind(OperadorModel::getLoginName, OperadorModel::setLoginName);
         binder.bindInstanceFields(this); 
 
-        Button btSalvar = new Button("Salvar", event -> {
+        Button btSalvar = new Button("Salvar", _-> {
             salvar(senha.getValue(), confirmarSenha.getValue());
         });
         btSalvar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -78,7 +85,9 @@ public class CadastroOperador extends VerticalLayout {
         formLayout.add(id);
         formLayout.add(new Div());
         formLayout.add(nome);
+        formLayout.add(loginName);
         formLayout.add(email);
+        formLayout.add(new Div());
         formLayout.add(senha);
         formLayout.add(confirmarSenha);
         formLayout.add(ativo);
@@ -94,8 +103,8 @@ public class CadastroOperador extends VerticalLayout {
         if (operadorOpt.isPresent()) {
             OperadorModel operador = operadorOpt.get();
             binder.readBean(operador);
-            senha.setValue(operador.getSenha());
-            confirmarSenha.setValue(operador.getSenha());
+            senha.setValue("");
+            confirmarSenha.setValue("");
             Notification.show("Operador encontrado! Modo de edição ativo.");
         } else {
             limparFormulario();
@@ -117,8 +126,17 @@ public class CadastroOperador extends VerticalLayout {
                 operador.setId(id.getValue().longValue());
             }
 
+            var operadorExistente=repository.findByLoginName(loginName.getValue());
+            if (operadorExistente != null) {
+                if (id.getValue() == null || !operadorExistente.get().getId().equals(id.getValue().longValue())) {
+                    Notification.show("Nome de Login já usado por outro operador!!")
+                                .addThemeVariants(NotificationVariant.LUMO_ERROR);
+                    return;
+                }
+            }
+            
             try {
-                OperadorModel salvo = repository.save(operador);
+                OperadorModel salvo = service.salvarOperador(operador);
                 
                 Notification.show("Operador salvo com sucesso! ID: " + salvo.getId())
                         .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
@@ -138,6 +156,7 @@ public class CadastroOperador extends VerticalLayout {
     private void limparFormulario() {
         binder.readBean(null);
         nome.clear();
+        loginName.clear();
         email.clear();
         senha.clear();
         confirmarSenha.clear();

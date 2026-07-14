@@ -1,5 +1,6 @@
 package com.minitextil.erp.app.view;
 
+import com.minitextil.erp.app.utils.ApplicationInfo;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -14,12 +15,16 @@ public class HomeView extends VerticalLayout {
 
     private static final long serialVersionUID = 1L;
 
-    public HomeView() {
+    private final ApplicationInfo appInfo;
+    
+    public HomeView(ApplicationInfo appInfo) {
+    	this.appInfo=appInfo;
+    	
         setSizeFull();
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
         
         add(new H1("Bem Vindo"));
-        add(new H2("MiniTêxtil ERP"));
+        add(new H2("MiniTêxtil ERP versão:"+appInfo.getVersion()));
     }
 }

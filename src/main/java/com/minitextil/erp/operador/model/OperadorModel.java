@@ -2,6 +2,10 @@ package com.minitextil.erp.operador.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,7 +21,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "operador")
-public class OperadorModel implements Serializable {
+public class OperadorModel implements Serializable,UserDetails {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,6 +34,10 @@ public class OperadorModel implements Serializable {
     @Size(max = 150)
     private String nome;
 
+    @Column(nullable=false,unique = true)
+    @NotBlank(message = "O nome do usuário no sistema é obrigatório")
+    private String loginName;
+    
     @Column(name = "email", unique = true, length = 150)
     @Email(message = "Email inválido")
     private String email;
@@ -58,8 +66,6 @@ public class OperadorModel implements Serializable {
         this.dataAtualizacao = LocalDateTime.now();
     }
 
-    // ---- Getters e Setters ----
-
     public Long getId() {
         return id;
     }
@@ -76,6 +82,14 @@ public class OperadorModel implements Serializable {
         this.nome = nome;
     }
 
+	public String getLoginName() {
+		return loginName;
+	}
+
+	public void setLoginName(String loginName) {
+		this.loginName = loginName;
+	}
+    
     public String getEmail() {
         return email;
     }
@@ -106,5 +120,41 @@ public class OperadorModel implements Serializable {
 
     public LocalDateTime getDataAtualizacao() {
         return dataAtualizacao;
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return java.util.List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.loginName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.ativo; 
     }
 }

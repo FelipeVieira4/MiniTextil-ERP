@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 import com.minitextil.erp.operador.model.OperadorModel;
 
 @Repository
-public interface OperadorRepository extends JpaRepository<OperadorModel, Long>{}
+public interface OperadorRepository extends JpaRepository<OperadorModel, Long>{
+	Optional<OperadorModel> findByLoginName(String loginName);
+}
