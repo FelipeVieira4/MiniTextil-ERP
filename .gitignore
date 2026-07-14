@@ -66,3 +66,9 @@ application-local.yml
 
 mvnw
 mvnw.cmd
+
+/node/
+/node_modules/
+
+# Ignora os arquivos de build temporários e bundles gerados do front-end
+src/main/frontend/generated
