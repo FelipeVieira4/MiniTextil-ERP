@@ -1,8 +1,12 @@
 package com.minitextil.erp.operador.view;
 
+import com.minitextil.erp.app.view.MainLayout;
+import com.minitextil.erp.components.core.Program;
+import com.minitextil.erp.components.core.ProgramContext;
 import com.minitextil.erp.operador.model.OperadorModel;
 import com.minitextil.erp.operador.repository.OperadorRepository;
 import com.minitextil.erp.operador.service.OperadorService;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -18,18 +22,15 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.ValueChangeMode;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
-import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Optional;
 
-@Route("/operador")
-@PageTitle("Cadastro Operador")
-@PermitAll
-public class CadastroOperador extends VerticalLayout {
+
+public class CadastroOperador extends VerticalLayout implements Program {
     private static final long serialVersionUID = 1L;
 
+    private ProgramContext context;
+    
     private final Binder<OperadorModel> binder = new BeanValidationBinder<>(OperadorModel.class);
     private final OperadorRepository repository;
     private final OperadorService service;
@@ -41,7 +42,7 @@ public class CadastroOperador extends VerticalLayout {
     private final PasswordField senha = new PasswordField("Nova Senha");
     private final PasswordField confirmarSenha = new PasswordField("Confirmar Senha");
     private final Checkbox ativo = new Checkbox("Ativo");
-
+    
     @Autowired
     public CadastroOperador(OperadorRepository repository,OperadorService service) {
         this.repository = repository;
@@ -162,4 +163,10 @@ public class CadastroOperador extends VerticalLayout {
         confirmarSenha.clear();
         ativo.setValue(true);
     }
+
+	@Override
+	public Component getView() {
+		// TODO Auto-generated method stub
+		return this;
+	}
 }

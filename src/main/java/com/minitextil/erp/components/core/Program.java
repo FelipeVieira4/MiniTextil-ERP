@@ -1,0 +1,11 @@
+package com.minitextil.erp.components.core;
+
+import com.vaadin.flow.component.Component;
+
+public interface Program {
+
+    Component getView();
+
+    default void onOpen(ProgramParams params, ProgramContext context) {}
+    default void onClose() {}
+}

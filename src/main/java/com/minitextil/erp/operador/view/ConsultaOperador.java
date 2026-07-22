@@ -1,9 +1,12 @@
 package com.minitextil.erp.operador.view;
 
-import com.minitextil.erp.components.GridComponent;
-import com.minitextil.erp.components.TipoColunas;
+import com.minitextil.erp.app.view.MainLayout;
+import com.minitextil.erp.components.core.Program;
+import com.minitextil.erp.components.grid.GridComponent;
+import com.minitextil.erp.components.grid.TipoColunas;
 import com.minitextil.erp.operador.model.OperadorModel;
 import com.minitextil.erp.operador.repository.OperadorRepository;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.router.PageTitle;
@@ -12,10 +15,7 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
-@Route("/operador/consulta")
-@PageTitle("Consulta de Operadores")
-@PermitAll
-public class ConsultaOperador extends VerticalLayout {
+public class ConsultaOperador extends VerticalLayout implements Program{
     private static final long serialVersionUID = 1L;
 
     private final OperadorRepository repository;
@@ -94,4 +94,10 @@ public class ConsultaOperador extends VerticalLayout {
             default -> nomeOp.contains(busca); // "Contém"
         };
     }
+
+	@Override
+	public Component getView() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

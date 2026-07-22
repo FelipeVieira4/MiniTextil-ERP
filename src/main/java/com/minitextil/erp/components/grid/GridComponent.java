@@ -1,4 +1,4 @@
-package com.minitextil.erp.components;
+package com.minitextil.erp.components.grid;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;

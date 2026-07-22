@@ -1,4 +1,4 @@
-package com.minitextil.erp.components;
+package com.minitextil.erp.components.grid;
 
 public enum TipoColunas {
 	Alfanumerico,
