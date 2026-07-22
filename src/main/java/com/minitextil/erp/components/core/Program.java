@@ -6,6 +6,7 @@ public interface Program {
 
     Component getView();
 
+    default void onOpen(ProgramContext context) {}
     default void onOpen(ProgramParams params, ProgramContext context) {}
     default void onClose() {}
 }

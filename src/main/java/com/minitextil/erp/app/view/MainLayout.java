@@ -94,7 +94,7 @@ public class MainLayout extends AppLayout {
 
         SideNavItem consultaOperadorItem = new SideNavItem("Consulta Operadores");
         consultaOperadorItem.getElement().addEventListener("click", e -> {
-            // openNewInstance(ProgramId.CONSULTA_OPERADOR, ProgramParams.empty());
+        	openNewInstance(ProgramId.CONSULTA_OPERADOR, ProgramParams.empty());
         });
 
         operadorModulo.addItem(cadastroOperadorItem, consultaOperadorItem);

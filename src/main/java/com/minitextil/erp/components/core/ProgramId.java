@@ -3,6 +3,7 @@ package com.minitextil.erp.components.core;
 
 import com.minitextil.erp.app.view.HomeView;
 import com.minitextil.erp.operador.view.CadastroOperador;
+import com.minitextil.erp.operador.view.ConsultaOperador;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.di.Instantiator;
 
@@ -10,8 +11,10 @@ import com.vaadin.flow.di.Instantiator;
 
 public enum ProgramId {
 	HOME("Home", HomeView.class),
-    CADASTRO_OPERADOR("Cadastro de Operador", CadastroOperador.class);
+    CADASTRO_OPERADOR("Cadastro de Operador", CadastroOperador.class),
+	CONSULTA_OPERADOR("Consulta de Operador", ConsultaOperador.class);
 
+	
     private final String titulo;
     private final Class<? extends Program> viewClass;
 

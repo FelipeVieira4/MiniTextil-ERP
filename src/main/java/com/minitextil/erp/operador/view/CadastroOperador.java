@@ -1,8 +1,6 @@
 package com.minitextil.erp.operador.view;
 
-import com.minitextil.erp.app.view.MainLayout;
 import com.minitextil.erp.components.core.Program;
-import com.minitextil.erp.components.core.ProgramContext;
 import com.minitextil.erp.operador.model.OperadorModel;
 import com.minitextil.erp.operador.repository.OperadorRepository;
 import com.minitextil.erp.operador.service.OperadorService;
@@ -16,20 +14,20 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.ValueChangeMode;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class CadastroOperador extends VerticalLayout implements Program {
     private static final long serialVersionUID = 1L;
-
-    private ProgramContext context;
     
     private final Binder<OperadorModel> binder = new BeanValidationBinder<>(OperadorModel.class);
     private final OperadorRepository repository;
@@ -44,21 +42,26 @@ public class CadastroOperador extends VerticalLayout implements Program {
     private final Checkbox ativo = new Checkbox("Ativo");
     
     @Autowired
-    public CadastroOperador(OperadorRepository repository,OperadorService service) {
+    public CadastroOperador(OperadorRepository repository, OperadorService service) {
         this.repository = repository;
-        this.service=service;
+        this.service = service;
         
         this.setWidthFull();
         this.setAlignItems(Alignment.CENTER); 
 
-        nome.setRequiredIndicatorVisible(true);
-        nome.setRequired(true);
-        loginName.setRequiredIndicatorVisible(true);
-        loginName.setRequired(true);
-        senha.setRequiredIndicatorVisible(true);
-        senha.setRequired(true);
-        confirmarSenha.setRequiredIndicatorVisible(true);
-        confirmarSenha.setRequired(true);
+        binder.forField(nome)
+                .asRequired("Informe o nome")
+                .bind(OperadorModel::getNome, OperadorModel::setNome);
+
+        binder.forField(loginName)
+                .asRequired("Informe o login")
+                .bind(OperadorModel::getLoginName, OperadorModel::setLoginName);
+
+        binder.forField(email)
+                .bind(OperadorModel::getEmail, OperadorModel::setEmail);
+
+        binder.forField(ativo)
+                .bind(OperadorModel::isAtivo, OperadorModel::setAtivo);
 
         id.setValueChangeMode(ValueChangeMode.ON_BLUR);
         id.addValueChangeListener(event -> {
@@ -70,30 +73,14 @@ public class CadastroOperador extends VerticalLayout implements Program {
             }
         });
 
-        binder.forField(nome).bind(OperadorModel::getNome, OperadorModel::setNome);
-        binder.forField(loginName).bind(OperadorModel::getLoginName, OperadorModel::setLoginName);
-        binder.bindInstanceFields(this); 
-
-        Button btSalvar = new Button("Salvar", _-> {
-            salvar(senha.getValue(), confirmarSenha.getValue());
-        });
+        Button btSalvar = new Button("Salvar", _-> salvar(senha.getValue(), confirmarSenha.getValue()));
         btSalvar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         
         FormLayout formLayout = new FormLayout();
         formLayout.setWidth("50vw");
         formLayout.setRowSpacing("25px");
         
-        formLayout.add(id);
-        formLayout.add(new Div());
-        formLayout.add(nome);
-        formLayout.add(loginName);
-        formLayout.add(email);
-        formLayout.add(new Div());
-        formLayout.add(senha);
-        formLayout.add(confirmarSenha);
-        formLayout.add(ativo);
-        formLayout.add(new Div());
-        formLayout.add(btSalvar);
+        formLayout.add(id, new Div(), nome, loginName, email, new Div(), senha, confirmarSenha, ativo, new Div(), btSalvar);
         
         add(formLayout);
     }
@@ -104,8 +91,8 @@ public class CadastroOperador extends VerticalLayout implements Program {
         if (operadorOpt.isPresent()) {
             OperadorModel operador = operadorOpt.get();
             binder.readBean(operador);
-            senha.setValue("");
-            confirmarSenha.setValue("");
+            senha.clear();
+            confirmarSenha.clear();
             Notification.show("Operador encontrado! Modo de edição ativo.");
         } else {
             limparFormulario();
@@ -114,22 +101,30 @@ public class CadastroOperador extends VerticalLayout implements Program {
     }
 
     private void salvar(String senhaDigitada, String confirmarSenhaDigitada) {
+        if (senhaDigitada.isBlank() || confirmarSenhaDigitada.isBlank()) {
+            Notification.show("Informe e confirme a senha!").addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return;
+        }
+
+        if (!senhaDigitada.equals(confirmarSenhaDigitada)) {
+            Notification.show("As senhas não coincidem!").addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return;
+        }
+
         OperadorModel operador = new OperadorModel();
 
         if (binder.writeBeanIfValid(operador)) {
             
-            if (!senhaDigitada.equals(confirmarSenhaDigitada)) {
-                Notification.show("As senhas não coincidem!").addThemeVariants(NotificationVariant.LUMO_ERROR);
-                return;
-            }
-
             if (id.getValue() != null) {
                 operador.setId(id.getValue().longValue());
             }
 
-            var operadorExistente=repository.findByLoginName(loginName.getValue());
-            if (operadorExistente != null) {
-                if (id.getValue() == null || !operadorExistente.get().getId().equals(id.getValue().longValue())) {
+            operador.setSenha(senhaDigitada);
+
+            Optional<OperadorModel> operadorExistente = repository.findByLoginName(loginName.getValue());
+            if (operadorExistente.isPresent()) {
+                Long idAtual = id.getValue() != null ? id.getValue().longValue() : null;
+                if (!operadorExistente.get().getId().equals(idAtual)) {
                     Notification.show("Nome de Login já usado por outro operador!!")
                                 .addThemeVariants(NotificationVariant.LUMO_ERROR);
                     return;
@@ -164,9 +159,8 @@ public class CadastroOperador extends VerticalLayout implements Program {
         ativo.setValue(true);
     }
 
-	@Override
-	public Component getView() {
-		// TODO Auto-generated method stub
-		return this;
-	}
+    @Override
+    public Component getView() {
+        return this;
+    }
 }

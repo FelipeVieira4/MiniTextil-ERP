@@ -1,6 +1,6 @@
 package com.minitextil.erp.operador.view;
 
-import com.minitextil.erp.app.view.MainLayout;
+
 import com.minitextil.erp.components.core.Program;
 import com.minitextil.erp.components.grid.GridComponent;
 import com.minitextil.erp.components.grid.TipoColunas;
@@ -9,9 +9,6 @@ import com.minitextil.erp.operador.repository.OperadorRepository;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
-import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
@@ -97,7 +94,6 @@ public class ConsultaOperador extends VerticalLayout implements Program{
 
 	@Override
 	public Component getView() {
-		// TODO Auto-generated method stub
-		return null;
+		return this;
 	}
 }
