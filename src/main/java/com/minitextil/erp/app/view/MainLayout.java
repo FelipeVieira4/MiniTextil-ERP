@@ -42,7 +42,7 @@ public class MainLayout extends AppLayout {
         instanceContentArea.setSizeFull();
         setContent(instanceContentArea);
 
-        instanceTabs.addSelectedChangeListener(e -> {
+        instanceTabs.addSelectedChangeListener(_-> {
             InstanceProgram ip = instances.get(instanceTabs.getSelectedTab());
             if (ip != null) {
                 showInstance(ip);
@@ -79,7 +79,7 @@ public class MainLayout extends AppLayout {
         navSideBar.setWidthFull();
 
         SideNavItem inicioItem = new SideNavItem("Início");
-	        inicioItem.getElement().addEventListener("click", e -> {
+	        inicioItem.getElement().addEventListener("click", _-> {
 	            openNewInstance(ProgramId.HOME, ProgramParams.empty());
 	        }
 	    );
@@ -88,12 +88,12 @@ public class MainLayout extends AppLayout {
         SideNavItem operadorModulo = new SideNavItem("Operador");
 
         SideNavItem cadastroOperadorItem = new SideNavItem("Cadastro Operador");
-        cadastroOperadorItem.getElement().addEventListener("click", e -> {
+        cadastroOperadorItem.getElement().addEventListener("click", _-> {
             openNewInstance(ProgramId.CADASTRO_OPERADOR, ProgramParams.empty());
         });
 
         SideNavItem consultaOperadorItem = new SideNavItem("Consulta Operadores");
-        consultaOperadorItem.getElement().addEventListener("click", e -> {
+        consultaOperadorItem.getElement().addEventListener("click", _-> {
         	openNewInstance(ProgramId.CONSULTA_OPERADOR, ProgramParams.empty());
         });
 
@@ -118,7 +118,7 @@ public class MainLayout extends AppLayout {
         
         // Gambi para obrigar front-side fechar atela
         btnFechar.getElement().executeJs("$0.addEventListener('click', e => e.stopPropagation());");
-        btnFechar.addClickListener(event -> {
+        btnFechar.addClickListener(_-> {
             closeInstance(tab);
         });
         
