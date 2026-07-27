@@ -23,13 +23,10 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-
 public class CadastroOperador extends VerticalLayout implements Program {
     private static final long serialVersionUID = 1L;
     
-    private final Binder<OperadorModel> binder = new BeanValidationBinder<>(OperadorModel.class);
+	private final Binder<OperadorModel> binder = new BeanValidationBinder<>(OperadorModel.class);
     private final OperadorRepository repository;
     private final OperadorService service;
 
@@ -40,8 +37,7 @@ public class CadastroOperador extends VerticalLayout implements Program {
     private final PasswordField senha = new PasswordField("Nova Senha");
     private final PasswordField confirmarSenha = new PasswordField("Confirmar Senha");
     private final Checkbox ativo = new Checkbox("Ativo");
-    
-    @Autowired
+
     public CadastroOperador(OperadorRepository repository, OperadorService service) {
         this.repository = repository;
         this.service = service;
