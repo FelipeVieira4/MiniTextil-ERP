@@ -85,6 +85,8 @@ public class MainLayout extends AppLayout {
 	    );
         navSideBar.addItem(inicioItem);
 
+        /*------ Módulo de Operador -----*/
+        
         SideNavItem operadorModulo = new SideNavItem("Operador");
 
         SideNavItem cadastroOperadorItem = new SideNavItem("Cadastro Operador");
@@ -99,7 +101,18 @@ public class MainLayout extends AppLayout {
 
         operadorModulo.addItem(cadastroOperadorItem, consultaOperadorItem);
         navSideBar.addItem(operadorModulo);
-
+        
+        /*------ Módulo de Empresa -----*/
+        
+        SideNavItem empresaModulo = new SideNavItem("Empresa");
+        SideNavItem cadastroEmpresaItem = new SideNavItem("Cadastro Empresa");
+        cadastroEmpresaItem.getElement().addEventListener("click", _-> {
+        	openNewInstance(ProgramId.CADASTRO_EMPRESA, ProgramParams.empty());
+        });
+        
+        empresaModulo.addItem(cadastroEmpresaItem);
+        navSideBar.addItem(empresaModulo);
+        
         return navSideBar;
     }
     
