@@ -85,9 +85,9 @@ public class MainLayout extends AppLayout {
         	comboEmpresa.setValue(usuarioSessao.getEmpresaAtiva());
         }
         
-        comboEmpresa.addAttachListener(_->{
+        comboEmpresa.addValueChangeListener(_->{
         	usuarioSessao.setEmpresaAtiva(comboEmpresa.getValue());
-        	Notification.show("Empresa ("+usuarioSessao.getEmpresaAtiva()+") selecionada!");
+        	Notification.show("Empresa ("+usuarioSessao.getEmpresaAtiva().getId()+") selecionada!");
         });
         
         headerLayout.add(comboEmpresa);

@@ -54,7 +54,7 @@ public class CadastroOperador extends VerticalLayout implements Program {
         this.setWidthFull();
         this.setAlignItems(Alignment.CENTER); 
 
-        List<EmpresaModel> listaEmpresas = empresaRepository.findAll();
+        List<EmpresaModel> listaEmpresas = this.empresaRepository.findAll();
         empresa.setItems(listaEmpresas);
         empresa.setItemLabelGenerator(empresa -> empresa.getId() + " - " + empresa.getDescricao());
         
