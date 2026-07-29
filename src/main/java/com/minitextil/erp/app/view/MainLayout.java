@@ -7,7 +7,7 @@ import java.util.Map;
 import com.minitextil.erp.components.core.InstanceProgram;
 import com.minitextil.erp.components.core.ProgramId;
 import com.minitextil.erp.components.core.ProgramParams;
-import com.minitextil.erp.empresa.model.EmpresaModel;
+import com.minitextil.erp.empresa.model.Empresa;
 import com.minitextil.erp.empresa.repository.EmpresaRepository;
 import com.minitextil.erp.operador.model.UsuarioSessao;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -75,9 +75,9 @@ public class MainLayout extends AppLayout {
         headerLayout.setFlexGrow(1, instanceTabs);
         headerLayout.setPadding(true);
 
-        List<EmpresaModel> listaEmpresas = empresaRepository.findAll();
+        List<Empresa> listaEmpresas = empresaRepository.findAll();
         
-        ComboBox<EmpresaModel> comboEmpresa = new ComboBox<EmpresaModel>("Empresa");
+        ComboBox<Empresa> comboEmpresa = new ComboBox<Empresa>("Empresa");
         comboEmpresa.setItems(listaEmpresas);
         comboEmpresa.setItemLabelGenerator(empresa -> empresa.getId() + " - " + empresa.getDescricao());
         

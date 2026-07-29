@@ -4,16 +4,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import com.minitextil.erp.operador.model.OperadorModel;
+import com.minitextil.erp.operador.model.Operador;
 
 @Component
 public class SecurityUtils {
 
-    public static OperadorModel getOperadorLogado() {
+    public static Operador getOperadorLogado() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         
-        if (auth != null && auth.getPrincipal() instanceof OperadorModel) {
-            return (OperadorModel) auth.getPrincipal();
+        if (auth != null && auth.getPrincipal() instanceof Operador) {
+            return (Operador) auth.getPrincipal();
         }
         
         return null;

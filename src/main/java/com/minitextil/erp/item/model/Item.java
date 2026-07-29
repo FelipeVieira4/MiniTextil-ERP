@@ -7,7 +7,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
 @Table(name="item")
-public class ItemModel {
+public class Item {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,5 +15,7 @@ public class ItemModel {
 	
 	@NotBlank(message = "Descrição do produto obrigátorio!")
 	private String descricao;
+	
+	
 	
 }

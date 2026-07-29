@@ -3,7 +3,7 @@ package com.minitextil.erp.operador.view;
 import com.minitextil.erp.components.core.Program;
 import com.minitextil.erp.components.grid.GridComponent;
 import com.minitextil.erp.components.grid.TipoColunas;
-import com.minitextil.erp.operador.model.OperadorModel;
+import com.minitextil.erp.operador.model.Operador;
 import com.minitextil.erp.operador.repository.OperadorRepository;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -14,7 +14,7 @@ public class ConsultaOperador extends VerticalLayout implements Program {
 
     private static final long serialVersionUID = 1L;
 
-    private final GridComponent<OperadorModel> grid = new GridComponent<>(OperadorModel.class);
+    private final GridComponent<Operador> grid = new GridComponent<>(Operador.class);
     private final OperadorRepository repository;
 
     public ConsultaOperador(OperadorRepository operadorRepository) {
@@ -33,13 +33,13 @@ public class ConsultaOperador extends VerticalLayout implements Program {
     private void configurarGrid() {
         grid.setColumnReorderingAllowed(true);
 
-        grid.addColunaComFiltro(OperadorModel::getId, "ID", TipoColunas.Numerico);
-        grid.addColunaComFiltro(OperadorModel::getNome, "Nome", TipoColunas.Alfanumerico);
-        grid.addColunaComFiltro(OperadorModel::getEmail, "Email", TipoColunas.Alfanumerico);
+        grid.addColunaComFiltro(Operador::getId, "ID", TipoColunas.Numerico);
+        grid.addColunaComFiltro(Operador::getNome, "Nome", TipoColunas.Alfanumerico);
+        grid.addColunaComFiltro(Operador::getEmail, "Email", TipoColunas.Alfanumerico);
     }
 
     private void carregarOperadores() {
-        List<OperadorModel> listaOperadores = repository.findAll();
+        List<Operador> listaOperadores = repository.findAll();
         grid.setItensComFiltro(listaOperadores);
     }
 

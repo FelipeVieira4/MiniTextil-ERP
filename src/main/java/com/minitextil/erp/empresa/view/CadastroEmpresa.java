@@ -3,7 +3,7 @@ package com.minitextil.erp.empresa.view;
 import java.util.Optional;
 
 import com.minitextil.erp.components.core.Program;
-import com.minitextil.erp.empresa.model.EmpresaModel;
+import com.minitextil.erp.empresa.model.Empresa;
 import com.minitextil.erp.empresa.repository.EmpresaRepository;
 import com.minitextil.erp.empresa.service.EmpresaService;
 import com.vaadin.flow.component.Component;
@@ -24,7 +24,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 public class CadastroEmpresa extends VerticalLayout implements Program {
 	   private static final long serialVersionUID = 1L;
 	    
-		private final Binder<EmpresaModel> binder = new BeanValidationBinder<>(EmpresaModel.class);
+		private final Binder<Empresa> binder = new BeanValidationBinder<>(Empresa.class);
 	    private final EmpresaRepository repository;
 		private final EmpresaService service;
 
@@ -43,20 +43,20 @@ public class CadastroEmpresa extends VerticalLayout implements Program {
 
 	        binder.forField(descricao)
 	                .asRequired("Informe a descrição")
-	                .bind(EmpresaModel::getDescricao, EmpresaModel::setDescricao);
+	                .bind(Empresa::getDescricao, Empresa::setDescricao);
 
 	        binder.forField(cnpjEmpresa)
 			        .withConverter(
 			                cnpjComMascara -> cnpjComMascara == null ? "" : cnpjComMascara.replaceAll("\\D", ""),
 			                cnpjNumerico -> this.service.formatCnpj(cnpjNumerico))
 	                .asRequired("Informe o CNPJ da empresa")
-	                .bind(EmpresaModel::getCnpj, EmpresaModel::setCnpj);
+	                .bind(Empresa::getCnpj, Empresa::setCnpj);
 	        
 	        cnpjEmpresa.setPlaceholder("00.000.000/0000-00");
 	        
 	        
 	        binder.forField(situacao)
-	                .bind(EmpresaModel::getSituacao, EmpresaModel::setSituacao);
+	                .bind(Empresa::getSituacao, Empresa::setSituacao);
 
 	        id.setValueChangeMode(ValueChangeMode.ON_BLUR);
 	        id.addValueChangeListener(event -> {
@@ -81,10 +81,10 @@ public class CadastroEmpresa extends VerticalLayout implements Program {
 	    }
 
 		private void MostrarDadosEmpresa(Long idBusca) {
-	        Optional<EmpresaModel> empresaObtida = repository.findById(idBusca);
+	        Optional<Empresa> empresaObtida = repository.findById(idBusca);
 
 	        if (empresaObtida.isPresent()) {
-	            EmpresaModel empresa= empresaObtida.get();
+	            Empresa empresa= empresaObtida.get();
 	            binder.readBean(empresa);
 	            Notification.show("Empresa ("+idBusca+") encontrado! Modo de edição ativo.");
 	        } else {
@@ -95,7 +95,7 @@ public class CadastroEmpresa extends VerticalLayout implements Program {
 
 	    private void salvar() {
 
-	        EmpresaModel empresaModel=new EmpresaModel();
+	        Empresa empresaModel=new Empresa();
 
 	        if (binder.writeBeanIfValid(empresaModel)) {
 	            
@@ -104,7 +104,7 @@ public class CadastroEmpresa extends VerticalLayout implements Program {
 	            }
 	            
 	            try {
-	                EmpresaModel empresaSalvo = repository.save(empresaModel);
+	                Empresa empresaSalvo = repository.save(empresaModel);
 	                
 	                Notification.show("Empresa salvo com sucesso! ID: " + empresaSalvo.getId())
 	                        .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
