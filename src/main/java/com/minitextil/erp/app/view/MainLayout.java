@@ -1,18 +1,24 @@
 package com.minitextil.erp.app.view;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.minitextil.erp.components.core.InstanceProgram;
 import com.minitextil.erp.components.core.ProgramId;
 import com.minitextil.erp.components.core.ProgramParams;
+import com.minitextil.erp.empresa.model.EmpresaModel;
+import com.minitextil.erp.empresa.repository.EmpresaRepository;
+import com.minitextil.erp.operador.model.UsuarioSessao;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.sidenav.SideNav;
@@ -34,7 +40,13 @@ public class MainLayout extends AppLayout {
     private final Div instanceContentArea = new Div();
     private final Map<Tab, InstanceProgram> instances = new LinkedHashMap<>();
 
-    public MainLayout() {
+    private EmpresaRepository empresaRepository;
+    private UsuarioSessao usuarioSessao;
+    
+    public MainLayout(EmpresaRepository empresaRepository,UsuarioSessao usuarioSessao) {
+    	this.empresaRepository = empresaRepository;
+    	this.usuarioSessao = usuarioSessao;
+    	
         setPrimarySection(Section.DRAWER);
         addHeaderContent();
         addDrawerContent();
@@ -63,6 +75,23 @@ public class MainLayout extends AppLayout {
         headerLayout.setFlexGrow(1, instanceTabs);
         headerLayout.setPadding(true);
 
+        List<EmpresaModel> listaEmpresas = empresaRepository.findAll();
+        
+        ComboBox<EmpresaModel> comboEmpresa = new ComboBox<EmpresaModel>("Empresa");
+        comboEmpresa.setItems(listaEmpresas);
+        comboEmpresa.setItemLabelGenerator(empresa -> empresa.getId() + " - " + empresa.getDescricao());
+        
+        if (usuarioSessao.getEmpresaAtiva()!=null) {
+        	comboEmpresa.setValue(usuarioSessao.getEmpresaAtiva());
+        }
+        
+        comboEmpresa.addAttachListener(_->{
+        	usuarioSessao.setEmpresaAtiva(comboEmpresa.getValue());
+        	Notification.show("Empresa ("+usuarioSessao.getEmpresaAtiva()+") selecionada!");
+        });
+        
+        headerLayout.add(comboEmpresa);
+        
         addToNavbar(true, headerLayout);
     }
 

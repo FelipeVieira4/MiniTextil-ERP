@@ -6,6 +6,4 @@ import org.springframework.stereotype.Repository;
 import com.minitextil.erp.empresa.model.EmpresaModel;
 
 @Repository
-public interface EmpresaRepository extends JpaRepository<EmpresaModel, Long> {
-
-}
+public interface EmpresaRepository extends JpaRepository<EmpresaModel, Long> {}

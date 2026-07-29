@@ -7,11 +7,16 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.minitextil.erp.empresa.model.EmpresaModel;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -55,6 +60,10 @@ public class OperadorModel implements Serializable,UserDetails {
     @Column(name = "data_atualizacao")
     private LocalDateTime dataAtualizacao;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "empresa_id", nullable = true)
+    private EmpresaModel empresa;
+    
     @PrePersist
     protected void onCreate() {
         this.dataCriacao = LocalDateTime.now();
@@ -122,8 +131,15 @@ public class OperadorModel implements Serializable,UserDetails {
         return dataAtualizacao;
     }
 
+    public EmpresaModel getEmpresa() {
+		return empresa;
+	}
 
-    @Override
+	public void setEmpresa(EmpresaModel empresa) {
+		this.empresa = empresa;
+	}
+
+	@Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return java.util.List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER"));
     }

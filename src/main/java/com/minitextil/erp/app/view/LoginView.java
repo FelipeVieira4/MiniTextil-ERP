@@ -11,7 +11,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 @AnonymousAllowed
 public class LoginView extends VerticalLayout {
     private static final long serialVersionUID = 1L;
-
+    
     public LoginView() {
         setSizeFull();
         setAlignItems(Alignment.CENTER);

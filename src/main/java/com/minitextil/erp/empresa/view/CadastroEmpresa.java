@@ -41,8 +41,6 @@ public class CadastroEmpresa extends VerticalLayout implements Program {
 	        this.setWidthFull();
 	        this.setAlignItems(Alignment.CENTER); 
 
-	        cnpjEmpresa.setPlaceholder("00.000.000/0000-00");
-	        
 	        binder.forField(descricao)
 	                .asRequired("Informe a descrição")
 	                .bind(EmpresaModel::getDescricao, EmpresaModel::setDescricao);
@@ -53,7 +51,10 @@ public class CadastroEmpresa extends VerticalLayout implements Program {
 			                cnpjNumerico -> this.service.formatCnpj(cnpjNumerico))
 	                .asRequired("Informe o CNPJ da empresa")
 	                .bind(EmpresaModel::getCnpj, EmpresaModel::setCnpj);
-
+	        
+	        cnpjEmpresa.setPlaceholder("00.000.000/0000-00");
+	        
+	        
 	        binder.forField(situacao)
 	                .bind(EmpresaModel::getSituacao, EmpresaModel::setSituacao);
 
