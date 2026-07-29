@@ -5,7 +5,7 @@ import java.io.Serializable;
 import org.springframework.stereotype.Component;
 
 import com.minitextil.erp.components.core.security.SecurityUtils;
-import com.minitextil.erp.empresa.model.EmpresaModel;
+import com.minitextil.erp.empresa.model.Empresa;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 
 @Component
@@ -14,20 +14,20 @@ public class UsuarioSessao implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private EmpresaModel empresaAtiva;
+    private Empresa empresaAtiva;
 
-    public OperadorModel getOperadorLogado() {
+    public Operador getOperadorLogado() {
         return SecurityUtils.getOperadorLogado();
     }
 
-    public EmpresaModel getEmpresaAtiva() {
+    public Empresa getEmpresaAtiva() {
         if (empresaAtiva == null && getOperadorLogado() != null) {
             return getOperadorLogado().getEmpresa();
         }
         return empresaAtiva;
     }
 
-    public void setEmpresaAtiva(EmpresaModel empresaAtiva) {
+    public void setEmpresaAtiva(Empresa empresaAtiva) {
         this.empresaAtiva = empresaAtiva;
     }
 }

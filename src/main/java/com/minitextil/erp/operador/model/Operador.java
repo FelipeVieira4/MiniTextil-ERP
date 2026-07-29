@@ -7,7 +7,7 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.minitextil.erp.empresa.model.EmpresaModel;
+import com.minitextil.erp.empresa.model.Empresa;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,7 +26,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "operador")
-public class OperadorModel implements Serializable,UserDetails {
+public class Operador implements Serializable,UserDetails {
 
     private static final long serialVersionUID = 1L;
 
@@ -62,7 +62,7 @@ public class OperadorModel implements Serializable,UserDetails {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "empresa_id", nullable = true)
-    private EmpresaModel empresa;
+    private Empresa empresa;
     
     @PrePersist
     protected void onCreate() {
@@ -131,11 +131,11 @@ public class OperadorModel implements Serializable,UserDetails {
         return dataAtualizacao;
     }
 
-    public EmpresaModel getEmpresa() {
+    public Empresa getEmpresa() {
 		return empresa;
 	}
 
-	public void setEmpresa(EmpresaModel empresa) {
+	public void setEmpresa(Empresa empresa) {
 		this.empresa = empresa;
 	}
 

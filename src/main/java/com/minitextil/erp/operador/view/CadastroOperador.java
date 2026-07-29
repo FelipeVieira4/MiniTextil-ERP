@@ -1,9 +1,9 @@
 package com.minitextil.erp.operador.view;
 
 import com.minitextil.erp.components.core.Program;
-import com.minitextil.erp.empresa.model.EmpresaModel;
+import com.minitextil.erp.empresa.model.Empresa;
 import com.minitextil.erp.empresa.repository.EmpresaRepository;
-import com.minitextil.erp.operador.model.OperadorModel;
+import com.minitextil.erp.operador.model.Operador;
 import com.minitextil.erp.operador.repository.OperadorRepository;
 import com.minitextil.erp.operador.service.OperadorService;
 import com.vaadin.flow.component.Component;
@@ -30,7 +30,7 @@ import java.util.Optional;
 public class CadastroOperador extends VerticalLayout implements Program {
     private static final long serialVersionUID = 1L;
     
-	private final Binder<OperadorModel> binder = new BeanValidationBinder<>(OperadorModel.class);
+	private final Binder<Operador> binder = new BeanValidationBinder<>(Operador.class);
     private final OperadorRepository repository;
     private final OperadorService service;
 
@@ -40,7 +40,7 @@ public class CadastroOperador extends VerticalLayout implements Program {
     private final TextField nome = new TextField("Nome");
     private final TextField loginName = new TextField("Nome Login");
     private final EmailField email = new EmailField("Email");
-    private final ComboBox<EmpresaModel> empresa = new ComboBox<>("Empresa Principal");
+    private final ComboBox<Empresa> empresa = new ComboBox<>("Empresa Principal");
     private final PasswordField senha = new PasswordField("Nova Senha");
     private final PasswordField confirmarSenha = new PasswordField("Confirmar Senha");
     private final Checkbox ativo = new Checkbox("Ativo");
@@ -54,26 +54,26 @@ public class CadastroOperador extends VerticalLayout implements Program {
         this.setWidthFull();
         this.setAlignItems(Alignment.CENTER); 
 
-        List<EmpresaModel> listaEmpresas = this.empresaRepository.findAll();
+        List<Empresa> listaEmpresas = this.empresaRepository.findAll();
         empresa.setItems(listaEmpresas);
         empresa.setItemLabelGenerator(empresa -> empresa.getId() + " - " + empresa.getDescricao());
         
         binder.forField(nome)
                 .asRequired("Informe o nome")
-                .bind(OperadorModel::getNome, OperadorModel::setNome);
+                .bind(Operador::getNome, Operador::setNome);
 
         binder.forField(loginName)
                 .asRequired("Informe o login")
-                .bind(OperadorModel::getLoginName, OperadorModel::setLoginName);
+                .bind(Operador::getLoginName, Operador::setLoginName);
 
         binder.forField(email)
-                .bind(OperadorModel::getEmail, OperadorModel::setEmail);
+                .bind(Operador::getEmail, Operador::setEmail);
 
         binder.forField(empresa)
-        		.bind(OperadorModel::getEmpresa, OperadorModel::setEmpresa);
+        		.bind(Operador::getEmpresa, Operador::setEmpresa);
         
         binder.forField(ativo)
-                .bind(OperadorModel::isAtivo, OperadorModel::setAtivo);
+                .bind(Operador::isAtivo, Operador::setAtivo);
 
         id.setValueChangeMode(ValueChangeMode.ON_BLUR);
         id.addValueChangeListener(event -> {
@@ -98,10 +98,10 @@ public class CadastroOperador extends VerticalLayout implements Program {
     }
 
 	private void ObterDadosOperador(Long idBusca) {
-        Optional<OperadorModel> operadorOpt = repository.findById(idBusca);
+        Optional<Operador> operadorOpt = repository.findById(idBusca);
 
         if (operadorOpt.isPresent()) {
-            OperadorModel operador = operadorOpt.get();
+            Operador operador = operadorOpt.get();
             binder.readBean(operador);
             
             if (operador.getEmpresa() != null) {
@@ -132,7 +132,7 @@ public class CadastroOperador extends VerticalLayout implements Program {
 	        return;
 	    }
 
-	    OperadorModel operador = new OperadorModel();
+	    Operador operador = new Operador();
 	    
 	    if (binder.writeBeanIfValid(operador)) {
 	        
@@ -144,7 +144,7 @@ public class CadastroOperador extends VerticalLayout implements Program {
 	            operador.setSenha(senhaDigitada);
 	        }
 
-	        Optional<OperadorModel> operadorExistente = repository.findByLoginName(loginName.getValue());
+	        Optional<Operador> operadorExistente = repository.findByLoginName(loginName.getValue());
 	        if (operadorExistente.isPresent()) {
 	            Long idAtual = id.getValue() != null ? id.getValue().longValue() : null;
 	            if (!operadorExistente.get().getId().equals(idAtual)) {
@@ -161,7 +161,7 @@ public class CadastroOperador extends VerticalLayout implements Program {
 	        }
 	       
 	        try {
-	            OperadorModel salvo = service.salvarOperador(operador);
+	            Operador salvo = service.salvarOperador(operador);
 	            
 	            Notification.show("Operador salvo com sucesso! ID: " + salvo.getId())
 	                    .addThemeVariants(NotificationVariant.LUMO_SUCCESS);

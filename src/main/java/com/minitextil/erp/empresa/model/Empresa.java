@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "empresa")
-public class EmpresaModel implements Serializable {
+public class Empresa implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
