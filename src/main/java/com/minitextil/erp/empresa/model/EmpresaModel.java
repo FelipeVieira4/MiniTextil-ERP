@@ -1,6 +1,8 @@
 package com.minitextil.erp.empresa.model;
 
 
+import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +14,9 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "empresa")
-public class EmpresaModel{
+public class EmpresaModel implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
