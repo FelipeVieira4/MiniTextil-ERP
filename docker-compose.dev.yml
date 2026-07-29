@@ -22,13 +22,12 @@ services:
       - DB_PASS=${DB_PASS}
     networks:
       - backend
-    # O DEVELOP DEVE FICAR AQUI, DENTRO DA API:
     develop:
       watch:
         - action: sync
-          path: ./target/classes
-          target: /app/target/classes
-        - action: restart
+          path: ./src/main/resources
+          target: /app/src/main/resources
+        - action: rebuild
           path: ./pom.xml
 
   db:
