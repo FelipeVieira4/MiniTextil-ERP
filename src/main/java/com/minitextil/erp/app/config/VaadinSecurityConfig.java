@@ -2,7 +2,6 @@ package com.minitextil.erp.app.config;
 
 import com.minitextil.erp.app.view.LoginView;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,12 +15,6 @@ import static com.vaadin.flow.spring.security.VaadinSecurityConfigurer.vaadin;
 @EnableWebSecurity
 @Configuration
 public class VaadinSecurityConfig {
-
-	@Value("${admin.userName}")
-	private String adminUserName;
-	
-	@Value("${admin.userPassword}")
-	private String adminPassword;
 	
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
