@@ -10,7 +10,8 @@ Padrão de criação de branches
 ---
 - ***chore*** atualização de pacotes
 ---
-
+- ***test*** criação e realização de testes
+---
 
 ## Deploy
 
