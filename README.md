@@ -1,9 +1,25 @@
 # MiniTêxtil - ERP
 
-Para rodar em desenvolvimento:
-docker compose -f docker-compose.dev.yml watch
+## Branch
+Padrão de criação de branches
 
-.env
+
+- ***feat*** melhorias e adição
+---
+- ***bugfix*** correções
+---
+- ***chore*** atualização de pacotes
+---
+
+
+## Deploy
+
+Para rodar em desenvolvimento:
+```
+docker compose -f docker-compose.dev.yml watch
+```
+
+Criação de um arquivo ***.env*** com as variáveis
 ```env
 DB_NAME=nome
 DB_USER=user
