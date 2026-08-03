@@ -13,8 +13,11 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.IntegerField;
@@ -37,6 +40,8 @@ public class CadastroOperador extends VerticalLayout implements Program {
     private final EmpresaRepository empresaRepository;
     
     private final IntegerField id = new IntegerField("Código (Deixe vazio para novo)");
+    private final Button btObter = new Button(new Icon(VaadinIcon.SEARCH));
+    
     private final TextField nome = new TextField("Nome");
     private final TextField loginName = new TextField("Nome Login");
     private final EmailField email = new EmailField("Email");
@@ -47,16 +52,18 @@ public class CadastroOperador extends VerticalLayout implements Program {
 
     public CadastroOperador(OperadorRepository repository, OperadorService service,EmpresaRepository empresaRepository) {
         this.repository = repository;
-        this.service = service;
-        
+        this.service = service;  
         this.empresaRepository=empresaRepository;
+        
         
         this.setWidthFull();
         this.setAlignItems(Alignment.CENTER); 
-
-        List<Empresa> listaEmpresas = this.empresaRepository.findAll();
-        empresa.setItems(listaEmpresas);
-        empresa.setItemLabelGenerator(empresa -> empresa.getId() + " - " + empresa.getDescricao());
+        
+        
+        HorizontalLayout idCampo = new HorizontalLayout(id,btObter);
+        idCampo.setDefaultVerticalComponentAlignment(HorizontalLayout.Alignment.BASELINE);
+        idCampo.setWidthFull();
+        
         
         binder.forField(nome)
                 .asRequired("Informe o nome")
@@ -69,6 +76,12 @@ public class CadastroOperador extends VerticalLayout implements Program {
         binder.forField(email)
                 .bind(Operador::getEmail, Operador::setEmail);
 
+        
+        List<Empresa> listaEmpresas = this.empresaRepository.findAll();
+        empresa.setItems(listaEmpresas);
+        empresa.setItemLabelGenerator(empresa -> empresa.getId() + " - " + empresa.getDescricao());
+        
+        
         binder.forField(empresa)
         		.bind(Operador::getEmpresa, Operador::setEmpresa);
         
@@ -85,6 +98,14 @@ public class CadastroOperador extends VerticalLayout implements Program {
             }
         });
 
+        btObter.addClickListener(_->{
+        	LookupOperador lookup = new LookupOperador();
+
+        	lookup.VerTodosOperador(this.repository, operadorSelecionado -> {
+        	    this.id.setValue(operadorSelecionado.getId().intValue());
+        	});
+        });
+        
         Button btSalvar = new Button("Salvar", _-> salvar(senha.getValue(), confirmarSenha.getValue()));
         btSalvar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         
@@ -92,11 +113,11 @@ public class CadastroOperador extends VerticalLayout implements Program {
         formLayout.setWidth("50vw");
         formLayout.setRowSpacing("25px");
         
-        formLayout.add(id, new Div(), nome, loginName, email, new Div(), empresa, new Div(), senha, confirmarSenha, ativo, new Div(), btSalvar);
+        formLayout.add(idCampo, new Div(), nome, loginName, email, new Div(), empresa, new Div(), senha, confirmarSenha, ativo, new Div(), btSalvar);
         
         add(formLayout);
     }
-
+    
 	private void ObterDadosOperador(Long idBusca) {
         Optional<Operador> operadorOpt = repository.findById(idBusca);
 
@@ -112,7 +133,7 @@ public class CadastroOperador extends VerticalLayout implements Program {
             
             senha.clear();
             confirmarSenha.clear();
-            Notification.show("Operador encontrado! Modo de edição ativo.");
+            Notification.show("Operador ("+idBusca+") encontrado! Modo de edição ativo.");
         } else {
             limparFormulario();
             Notification.show("ID não encontrado. Um novo registro será criado ao salvar.", 4000, Notification.Position.MIDDLE);
