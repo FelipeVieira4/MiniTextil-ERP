@@ -3,6 +3,7 @@ package com.minitextil.erp.operador.view;
 import com.minitextil.erp.components.core.Program;
 import com.minitextil.erp.components.grid.GridComponent;
 import com.minitextil.erp.components.grid.TipoColunas;
+import com.minitextil.erp.empresa.model.Empresa;
 import com.minitextil.erp.operador.model.Operador;
 import com.minitextil.erp.operador.repository.OperadorRepository;
 import com.vaadin.flow.component.Component;
