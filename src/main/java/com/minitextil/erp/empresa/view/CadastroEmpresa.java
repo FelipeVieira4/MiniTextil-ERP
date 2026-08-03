@@ -12,8 +12,11 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -28,6 +31,8 @@ public class CadastroEmpresa extends VerticalLayout implements Program {
 	    private final EmpresaRepository repository;
 		private final EmpresaService service;
 
+		private final Button btObter = new Button(new Icon(VaadinIcon.SEARCH));
+		
 	    private final IntegerField id = new IntegerField("Código (Deixe vazio para novo)");
 	    private final TextField descricao = new TextField("Descrição");
 	    private final TextField cnpjEmpresa = new TextField("CNPJ Empresa");
@@ -41,6 +46,10 @@ public class CadastroEmpresa extends VerticalLayout implements Program {
 	        this.setWidthFull();
 	        this.setAlignItems(Alignment.CENTER); 
 
+	        HorizontalLayout idCampo = new HorizontalLayout(id,btObter);
+	        idCampo.setDefaultVerticalComponentAlignment(HorizontalLayout.Alignment.BASELINE);
+	        idCampo.setWidthFull();
+	        
 	        binder.forField(descricao)
 	                .asRequired("Informe a descrição")
 	                .bind(Empresa::getDescricao, Empresa::setDescricao);
@@ -68,6 +77,14 @@ public class CadastroEmpresa extends VerticalLayout implements Program {
 	            }
 	        });
 
+	        btObter.addClickListener(_->{
+	        	LookupEmpresa lookup = new LookupEmpresa();
+
+	        	lookup.VerTodasEmpresas(this.repository, operadorSelecionado -> {
+	        	    this.id.setValue(operadorSelecionado.getId().intValue());
+	        	});
+	        });
+	        
 	        Button btSalvar = new Button("Salvar", _-> salvar());
 	        btSalvar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 	        
@@ -75,7 +92,7 @@ public class CadastroEmpresa extends VerticalLayout implements Program {
 	        formLayout.setWidth("50vw");
 	        formLayout.setRowSpacing("25px");
 	        
-	        formLayout.add(id, new Div(), descricao, cnpjEmpresa, situacao, new Div(), btSalvar);
+	        formLayout.add(idCampo, new Div(), descricao, cnpjEmpresa, situacao, new Div(), btSalvar);
 	        
 	        add(formLayout);
 	    }
