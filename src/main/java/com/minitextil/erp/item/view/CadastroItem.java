@@ -2,11 +2,10 @@ package com.minitextil.erp.item.view;
 
 import java.util.Optional;
 
-import com.minitextil.erp.components.core.Program;
+import com.minitextil.erp.components.core.ErpProgram;
 import com.minitextil.erp.item.model.Item;
 import com.minitextil.erp.item.model.UnidadeMedida;
 import com.minitextil.erp.item.repository.ItemRepository;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -18,14 +17,13 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
-public class CadastroItem extends VerticalLayout implements Program {
+public class CadastroItem extends ErpProgram {
     private static final long serialVersionUID = 1L;
     
 	private final Binder<Item> binder = new BeanValidationBinder<>(Item.class);
@@ -34,7 +32,7 @@ public class CadastroItem extends VerticalLayout implements Program {
     private final IntegerField id = new IntegerField("Código (Deixe vazio para novo)");
     private final Button btObter = new Button(new Icon(VaadinIcon.SEARCH));
     
-    private final TextField descricao = new TextField("Descricao");
+    private final TextField descricao = new TextField("Descrição");
     private final Checkbox ativo = new Checkbox("Ativo");
     private final ComboBox<UnidadeMedida> unidade = new ComboBox<>("Unidade");
 
@@ -61,7 +59,7 @@ public class CadastroItem extends VerticalLayout implements Program {
 
         
         unidade.setItems(UnidadeMedida.values());
-        unidade.setItemLabelGenerator(unidade -> unidade.name());
+        unidade.setItemLabelGenerator(unidadeItem -> unidadeItem.name());
         
         binder.forField(unidade)
         		.bind(Item::getUnidade,Item::setUnidade);
@@ -77,15 +75,15 @@ public class CadastroItem extends VerticalLayout implements Program {
             }
         });
 
-        /*
-        btObter.addClickListener(_->{
-        	LookupOperador lookup = new LookupOperador();
 
-        	lookup.VerTodosOperador(this.repository, operadorSelecionado -> {
-        	    this.id.setValue(operadorSelecionado.getId().intValue());
+        btObter.addClickListener(_->{
+        	LookupItem lookup = new LookupItem();
+
+        	lookup.VerTodosItens(this.repository, itemSelecionado -> {
+        	    id.setValue(itemSelecionado.getId().intValue());
         	});
         });
-        */
+
         
         Button btSalvar = new Button("Salvar", _-> salvar());
         btSalvar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -117,7 +115,6 @@ public class CadastroItem extends VerticalLayout implements Program {
 	    boolean isEdicao = id.getValue() != null;
 
 	    Item item= new Item();
-	    
 	    if (binder.writeBeanIfValid(item)) {
 	        
 	        if (isEdicao) {
@@ -127,7 +124,7 @@ public class CadastroItem extends VerticalLayout implements Program {
 	        try {
 	            Item itemSalvo = repository.save(item);
 	            
-	            Notification.show("Operador salvo com sucesso! ID: " + itemSalvo.getId())
+	            Notification.show("Item salvo com sucesso! ID: " + itemSalvo.getId())
 	                    .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 	            
 	            limparFormulario();
@@ -147,10 +144,5 @@ public class CadastroItem extends VerticalLayout implements Program {
         descricao.clear();
         ativo.setValue(true);
         unidade.clear();
-    }
-
-    @Override
-    public Component getView() {
-        return this;
     }
 }
