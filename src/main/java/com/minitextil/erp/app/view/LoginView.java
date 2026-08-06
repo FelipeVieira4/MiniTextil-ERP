@@ -35,7 +35,7 @@ public class LoginView extends HorizontalLayout {
         loginContainer.add(login);
 
         Image loginImage = new Image("images/login_image.jpg", "Imagem de Fundo");
-        loginImage.setWidth("60%"); 
+        loginImage.setWidth("70%"); 
         loginImage.setHeight("100%");
         loginImage.getStyle().set("object-fit", "cover");
 
