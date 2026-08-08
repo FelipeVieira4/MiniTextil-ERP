@@ -4,10 +4,10 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 
-public class ErpProgram extends VerticalLayout implements Program {
+public class ProgramErp extends VerticalLayout implements Program {
     private static final long serialVersionUID = 1L;
 
-    public ErpProgram() {}
+    public ProgramErp() {}
 
     @Override
     public Component getView() {
