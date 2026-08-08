@@ -154,7 +154,13 @@ public class MainLayout extends AppLayout {
         	openNewInstance(ProgramId.CADASTRO_ITEM, ProgramParams.empty());
         });
         
-        itemModulo.addItem(cadastroItem);
+        SideNavItem consultaItem = new SideNavItem("Consulta de Item");
+        consultaItem.getElement().addEventListener("click", _-> {
+        	openNewInstance(ProgramId.CONSULTA_ITEM, ProgramParams.empty());
+        });
+        
+        
+        itemModulo.addItem(cadastroItem,consultaItem);
         navSideBar.addItem(itemModulo);
         
         return navSideBar;

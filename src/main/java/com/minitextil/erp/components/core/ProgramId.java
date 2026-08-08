@@ -4,6 +4,7 @@ package com.minitextil.erp.components.core;
 import com.minitextil.erp.app.view.HomeView;
 import com.minitextil.erp.empresa.view.CadastroEmpresa;
 import com.minitextil.erp.item.view.CadastroItem;
+import com.minitextil.erp.item.view.ConsultaItem;
 import com.minitextil.erp.operador.view.CadastroOperador;
 import com.minitextil.erp.operador.view.ConsultaOperador;
 import com.vaadin.flow.component.UI;
@@ -16,7 +17,8 @@ public enum ProgramId {
     CADASTRO_OPERADOR("Cadastro de Operador", CadastroOperador.class),
 	CONSULTA_OPERADOR("Consulta de Operador", ConsultaOperador.class),
 	CADASTRO_EMPRESA("Cadastro de Empresa", CadastroEmpresa.class),
-	CADASTRO_ITEM("Cadastro de Item", CadastroItem.class);
+	CADASTRO_ITEM("Cadastro de Item", CadastroItem.class),
+	CONSULTA_ITEM("Consulta de Item", ConsultaItem.class);
 	
 	
     private final String titulo;
