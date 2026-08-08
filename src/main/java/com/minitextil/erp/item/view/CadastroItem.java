@@ -2,7 +2,7 @@ package com.minitextil.erp.item.view;
 
 import java.util.Optional;
 
-import com.minitextil.erp.components.core.ErpProgram;
+import com.minitextil.erp.components.core.ProgramErp;
 import com.minitextil.erp.item.model.Item;
 import com.minitextil.erp.item.model.UnidadeMedida;
 import com.minitextil.erp.item.repository.ItemRepository;
@@ -23,7 +23,7 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
-public class CadastroItem extends ErpProgram {
+public class CadastroItem extends ProgramErp {
     private static final long serialVersionUID = 1L;
     
 	private final Binder<Item> binder = new BeanValidationBinder<>(Item.class);
@@ -84,6 +84,18 @@ public class CadastroItem extends ErpProgram {
         	});
         });
 
+        /*
+        HorizontalLayout botoes = new HorizontalLayout();
+        
+        Button btSalvar = new Button("Salvar", _-> salvar());
+        btSalvar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        
+        Button btExcluir = new Button("Excluir", _-> excluir(id.getValue().longValue()));
+        btExcluir.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        
+        botoes.add(btSalvar);
+        botoes.add(btExcluir);
+        */
         
         Button btSalvar = new Button("Salvar", _-> salvar());
         btSalvar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -138,6 +150,25 @@ public class CadastroItem extends ErpProgram {
 	        Notification.show("Preencha os campos obrigatórios corretamente.").addThemeVariants(NotificationVariant.LUMO_ERROR);
 	    }
 	}
+	
+	/*
+	private void excluir(Long idExcluir) {
+
+        try {
+            repository.deleteById(idExcluir);
+            
+            Notification.show("Item Excluir com sucesso! ID: " + idExcluir)
+                    .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            
+            limparFormulario();
+            id.clear();
+            
+        } catch (Exception e) {
+            Notification.show("Erro ao salvar: " + e.getMessage()).addThemeVariants(NotificationVariant.LUMO_ERROR);
+        }
+	}
+	*/
+
 
     private void limparFormulario() {
         binder.readBean(null);
