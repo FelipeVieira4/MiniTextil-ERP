@@ -29,7 +29,7 @@ public class CadastroItem extends ProgramErp {
 	private final Binder<Item> binder = new BeanValidationBinder<>(Item.class);
     private final ItemRepository repository;
 
-    private final IntegerField id = new IntegerField("Código");
+    private final IntegerField id = new IntegerField("Código TESTE");
     private final Button btObter = new Button(new Icon(VaadinIcon.SEARCH));
     
     private final TextField descricao = new TextField("Descrição");
