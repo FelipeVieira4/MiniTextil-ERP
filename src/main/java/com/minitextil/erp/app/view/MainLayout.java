@@ -146,6 +146,23 @@ public class MainLayout extends AppLayout {
         empresaModulo.addItem(cadastroEmpresaItem);
         navSideBar.addItem(empresaModulo);
         
+        /*------ Módulo de Item -----*/
+        
+        SideNavItem itemModulo = new SideNavItem("Item");
+        SideNavItem cadastroItem = new SideNavItem("Cadastro de Item");
+        cadastroItem.getElement().addEventListener("click", _-> {
+        	openNewInstance(ProgramId.CADASTRO_ITEM, ProgramParams.empty());
+        });
+        
+        SideNavItem consultaItem = new SideNavItem("Consulta de Item");
+        consultaItem.getElement().addEventListener("click", _-> {
+        	openNewInstance(ProgramId.CONSULTA_ITEM, ProgramParams.empty());
+        });
+        
+        
+        itemModulo.addItem(cadastroItem,consultaItem);
+        navSideBar.addItem(itemModulo);
+        
         return navSideBar;
     }
     
