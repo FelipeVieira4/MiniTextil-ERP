@@ -2,7 +2,11 @@ package com.minitextil.erp.item.view;
 
 import java.util.Optional;
 
+import com.minitextil.erp.app.view.MainLayout;
+import com.minitextil.erp.components.core.InstanceProgram;
 import com.minitextil.erp.components.core.ProgramErp;
+import com.minitextil.erp.components.core.ProgramId;
+import com.minitextil.erp.components.core.ProgramParams;
 import com.minitextil.erp.item.model.Item;
 import com.minitextil.erp.item.model.UnidadeMedida;
 import com.minitextil.erp.item.repository.ItemRepository;
@@ -96,6 +100,20 @@ public class CadastroItem extends ProgramErp {
         botoes.add(btSalvar);
         botoes.add(btExcluir);
         */
+
+        /*
+        HorizontalLayout botoes = new HorizontalLayout();
+
+
+        Button btEstoqueItem = new Button("Estoque", _-> {
+            InstanceProgram instancia = new InstanceProgram();
+
+            //instancia.pushProgram();
+        });
+        btEstoqueItem.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        botoes.add(btEstoqueItem);
+        */
         
         Button btSalvar = new Button("Salvar", _-> salvar());
         btSalvar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -105,7 +123,7 @@ public class CadastroItem extends ProgramErp {
         formLayout.setRowSpacing("25px");
         
         formLayout.add(idCampo, new Div(), descricao, ativo, unidade, new Div(), btSalvar);
-        
+
         add(formLayout);
     }
     
