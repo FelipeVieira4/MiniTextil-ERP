@@ -23,5 +23,25 @@
         "viewClassName": "com.minitextil.erp.operador.view.ConsultaOperador"
       }
     ]
+  },
+  {
+    "modulo": "Itens",
+    "programas": [
+      {
+        "id": "CADASTRO_ITEM",
+        "titulo": "Cadastro de Item",
+        "viewClassName": "com.minitextil.erp.item.view.CadastroItem"
+      },
+      {
+        "id": "CONSULTA_ITEM",
+        "titulo": "Consulta de Itens",
+        "viewClassName": "com.minitextil.erp.item.view.ConsultaItem"
+      },
+      {
+        "id": "TESTE_MAIN",
+        "titulo": "Teste Main",
+        "viewClassName": "com.minitextil.erp.item.view.TesteMain"
+      }
+    ]
   }
 ]

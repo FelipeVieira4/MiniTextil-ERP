@@ -39,7 +39,7 @@ public class CadastroOperador extends VerticalLayout implements Program {
 
     private final EmpresaRepository empresaRepository;
     
-    private final IntegerField id = new IntegerField("Código (Deixe vazio para novo)");
+    private final IntegerField id = new IntegerField("Código");
     private final Button btObter = new Button(new Icon(VaadinIcon.SEARCH));
     
     private final TextField nome = new TextField("Nome");

@@ -1,6 +1,5 @@
 package com.minitextil.erp.components.core.program;
 
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.function.Consumer;
@@ -24,50 +23,57 @@ public class InstanceProgram extends VerticalLayout {
     private final Tabs stackTabs = new Tabs();
     private final Div contentArea = new Div();
     private final Deque<StackEntry> stack = new ArrayDeque<>();
-    private final Tab instanceTab; // referência ao Tab desta instância na TAB1
+    private final Tab instanceTab;
+    private final ProgramRegistry programRegistry;
 
-    public InstanceProgram(ProgramId rootProgramId, ProgramParams rootParams, Tab instanceTab) {
+    public InstanceProgram(ProgramRegistry programRegistry, String rootProgramId, ProgramParams rootParams, Tab instanceTab) {
+        this.programRegistry = programRegistry;
         this.instanceTab = instanceTab;
+
         setSizeFull();
         setPadding(false);
         setSpacing(false);
+
         stackTabs.setWidthFull();
         contentArea.setSizeFull();
+
         add(stackTabs, contentArea);
         setFlexGrow(1, contentArea);
 
+        // O primeiro programa empilhado será o programa raiz (root)
         pushProgram(rootProgramId, rootParams, null);
     }
 
-    
-    public void pushProgram(ProgramId programId, ProgramParams params, Consumer<Object> onResult) {
+    public void pushProgram(String programId, ProgramParams params, Consumer<Object> onResult) {
         if (!stack.isEmpty()) {
-            stack.peek().tab().setEnabled(false); // desabilita a TAB do programa anterior
+            stack.peek().tab().setEnabled(false); // Desabilita a Tab do programa anterior
         }
 
+        ProgramaDef programaDef = programRegistry.get(programId);
+        String tituloTexto = programaDef.titulo();
+
         Tab tab;
-        if (!isRoot()) {	// não considerar a bagaça para a o programa "pai" da instância
-	        Span titulo = new Span(programId.getTitulo());
-	        
-	        Button btnFechar = new Button(VaadinIcon.CLOSE_SMALL.create());
-	        btnFechar.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_ICON);
-	        btnFechar.getStyle().set("font-size", "12px").set("margin-left", "8px");
-	        
-	        HorizontalLayout tabContent = new HorizontalLayout(titulo, btnFechar);
-	        tabContent.setAlignItems(FlexComponent.Alignment.CENTER);
-	        tabContent.setSpacing(false);
-	        
-	        tab = new Tab(tabContent);
-	        
-	        	btnFechar.getElement().executeJs("$0.addEventListener('click', e => e.stopPropagation());");
-	        btnFechar.addClickListener(_-> {
-	        	popProgram();
-	        });
-        }else {
-        	tab = new Tab(programId.getTitulo());
+        if (!isRoot()) {
+            Span titulo = new Span(tituloTexto);
+
+            Button btnFechar = new Button(VaadinIcon.CLOSE_SMALL.create());
+            btnFechar.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_ICON);
+            btnFechar.getStyle().set("font-size", "12px").set("margin-left", "8px");
+
+            HorizontalLayout tabContent = new HorizontalLayout(titulo, btnFechar);
+            tabContent.setAlignItems(FlexComponent.Alignment.CENTER);
+            tabContent.setSpacing(false);
+
+            tab = new Tab(tabContent);
+
+            btnFechar.getElement().addEventListener("click", _ -> popProgram())
+                    .addEventData("event.stopPropagation()");
+        } else {
+            tab = new Tab(tituloTexto);
         }
-        
-        Program program = programId.createInstance();
+
+        // Instancia o programa usando o ProgramRegistry / Vaadin Instantiator
+        Program program = programRegistry.createInstance(programId);
         StackEntry entry = new StackEntry(programId, tab, program, onResult);
         stack.push(entry);
 
@@ -80,39 +86,26 @@ public class InstanceProgram extends VerticalLayout {
     }
 
     public void popProgram() {
-        if (isRoot()) {
-            return;
-        }
-
-        StackEntry closed = stack.pop();
-        StackEntry previous = stack.peek();
-        
-        previous.tab().setEnabled(true);
-        stackTabs.setSelectedTab(previous.tab());
-        
-        stackTabs.remove(closed.tab());
-        closed.program().onClose();
-
-        showContent(previous.program().getView());
-        syncInstanceTabLabel();
+        popProgram(null);
     }
-    
-    
+
     public void popProgram(Object result) {
-        if (isRoot()) {
+        if (stack.size() <= 1) {
             return;
         }
 
         StackEntry closed = stack.pop();
         StackEntry previous = stack.peek();
-        
-        previous.tab().setEnabled(true);
-        stackTabs.setSelectedTab(previous.tab());
-        
+
+        if (previous != null) {
+            previous.tab().setEnabled(true);
+            stackTabs.setSelectedTab(previous.tab());
+            showContent(previous.program().getView());
+        }
+
         stackTabs.remove(closed.tab());
         closed.program().onClose();
 
-        showContent(previous.program().getView());
         syncInstanceTabLabel();
 
         if (closed.onResult() != null) {
@@ -122,16 +115,24 @@ public class InstanceProgram extends VerticalLayout {
 
     private void showContent(Component view) {
         contentArea.removeAll();
-        contentArea.add(view);
+        if (view != null) {
+            contentArea.add(view);
+        }
     }
 
     private void syncInstanceTabLabel() {
+        if (stack.isEmpty() || instanceTab == null) {
+            return;
+        }
+
+        String tituloAtual = programRegistry.get(stack.peek().programId()).titulo();
+
         instanceTab.getChildren()
-            .filter(HorizontalLayout.class::isInstance)
-            .map(HorizontalLayout.class::cast)
-            .flatMap(hl -> hl.getChildren().filter(Span.class::isInstance).map(Span.class::cast))
-            .findFirst()
-            .ifPresent(span -> span.setText(stack.peek().programId().getTitulo()));
+                .filter(HorizontalLayout.class::isInstance)
+                .map(HorizontalLayout.class::cast)
+                .flatMap(hl -> hl.getChildren().filter(Span.class::isInstance).map(Span.class::cast))
+                .findFirst()
+                .ifPresent(span -> span.setText(tituloAtual));
     }
 
     public Tab getInstanceTab() {
@@ -139,10 +140,10 @@ public class InstanceProgram extends VerticalLayout {
     }
 
     public boolean isRoot() {
-        return stack.size() == 0;
+        return stack.isEmpty();
     }
 
-    private record StackEntry(ProgramId programId, Tab tab, Program program, Consumer<Object> onResult) {}
+    private record StackEntry(String programId, Tab tab, Program program, Consumer<Object> onResult) {}
 
     private static class DefaultProgramContext implements ProgramContext {
         private final InstanceProgram owner;
@@ -152,12 +153,12 @@ public class InstanceProgram extends VerticalLayout {
         }
 
         @Override
-        public void openProgram(ProgramId programId, ProgramParams params) {
+        public void openProgram(String programId, ProgramParams params) {
             owner.pushProgram(programId, params, null);
         }
 
         @Override
-        public void openProgram(ProgramId programId, ProgramParams params, Consumer<Object> onResult) {
+        public void openProgram(String programId, ProgramParams params, Consumer<Object> onResult) {
             owner.pushProgram(programId, params, onResult);
         }
 
