@@ -4,9 +4,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.minitextil.erp.components.core.InstanceProgram;
-import com.minitextil.erp.components.core.ProgramId;
-import com.minitextil.erp.components.core.ProgramParams;
+import com.minitextil.erp.components.core.program.InstanceProgram;
+import com.minitextil.erp.components.core.program.ProgramId;
+import com.minitextil.erp.components.core.program.ProgramParams;
 import com.minitextil.erp.empresa.model.Empresa;
 import com.minitextil.erp.empresa.repository.EmpresaRepository;
 import com.minitextil.erp.operador.model.UsuarioSessao;

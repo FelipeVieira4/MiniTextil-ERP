@@ -1,7 +1,7 @@
 package com.minitextil.erp.app.view;
 
 import com.minitextil.erp.app.utils.ApplicationInfo;
-import com.minitextil.erp.components.core.Program;
+import com.minitextil.erp.components.core.program.Program;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;

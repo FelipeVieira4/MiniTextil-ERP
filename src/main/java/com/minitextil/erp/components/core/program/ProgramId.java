@@ -1,4 +1,4 @@
-package com.minitextil.erp.components.core;
+package com.minitextil.erp.components.core.program;
 
 
 import com.minitextil.erp.app.view.HomeView;

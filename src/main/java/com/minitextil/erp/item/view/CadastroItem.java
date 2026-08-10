@@ -2,7 +2,7 @@ package com.minitextil.erp.item.view;
 
 import java.util.Optional;
 
-import com.minitextil.erp.components.core.ProgramErp;
+import com.minitextil.erp.components.core.program.ProgramErp;
 import com.minitextil.erp.item.model.Item;
 import com.minitextil.erp.item.model.UnidadeMedida;
 import com.minitextil.erp.item.repository.ItemRepository;
