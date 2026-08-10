@@ -4,9 +4,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.minitextil.erp.components.core.InstanceProgram;
-import com.minitextil.erp.components.core.ProgramId;
-import com.minitextil.erp.components.core.ProgramParams;
+import com.minitextil.erp.components.core.program.InstanceProgram;
+import com.minitextil.erp.components.core.program.ProgramParams;
+import com.minitextil.erp.components.core.program.*;
 import com.minitextil.erp.empresa.model.Empresa;
 import com.minitextil.erp.empresa.repository.EmpresaRepository;
 import com.minitextil.erp.operador.model.UsuarioSessao;
@@ -41,13 +41,15 @@ public class MainLayout extends AppLayout {
     private final Div instanceContentArea = new Div();
     private final Map<Tab, InstanceProgram> instances = new LinkedHashMap<>();
 
-    private EmpresaRepository empresaRepository;
-    private UsuarioSessao usuarioSessao;
-    
-    public MainLayout(EmpresaRepository empresaRepository,UsuarioSessao usuarioSessao) {
-    	this.empresaRepository = empresaRepository;
-    	this.usuarioSessao = usuarioSessao;
-    	
+    private final EmpresaRepository empresaRepository;
+    private final UsuarioSessao usuarioSessao;
+    private final ProgramRegistry programRegistry;
+
+    public MainLayout(EmpresaRepository empresaRepository, UsuarioSessao usuarioSessao, ProgramRegistry programRegistry) {
+        this.empresaRepository = empresaRepository;
+        this.usuarioSessao = usuarioSessao;
+        this.programRegistry = programRegistry;
+
         setPrimarySection(Section.DRAWER);
         addHeaderContent();
         addDrawerContent();
@@ -55,15 +57,18 @@ public class MainLayout extends AppLayout {
         instanceContentArea.setSizeFull();
         setContent(instanceContentArea);
 
-        instanceTabs.addSelectedChangeListener(_-> {
-            InstanceProgram ip = instances.get(instanceTabs.getSelectedTab());
-            if (ip != null) {
-                showInstance(ip);
+        instanceTabs.addSelectedChangeListener(_ -> {
+            Tab selectedTab = instanceTabs.getSelectedTab();
+            if (selectedTab != null) {
+                InstanceProgram ip = instances.get(selectedTab);
+                if (ip != null) {
+                    showInstance(ip);
+                }
             }
         });
-        
-        // Abre uma tela inicial padrão ao carregar o ERP
-        openNewInstance(ProgramId.HOME, ProgramParams.empty());
+
+        // Abre a tela inicial padrão ao carregar o ERP
+        openNewInstance("HOME", ProgramParams.empty());
     }
 
     private void addHeaderContent() {
@@ -77,22 +82,23 @@ public class MainLayout extends AppLayout {
         headerLayout.setPadding(true);
 
         List<Empresa> listaEmpresas = empresaRepository.findAll();
-        
-        ComboBox<Empresa> comboEmpresa = new ComboBox<Empresa>("Empresa");
+
+        ComboBox<Empresa> comboEmpresa = new ComboBox<>("Empresa");
         comboEmpresa.setItems(listaEmpresas);
         comboEmpresa.setItemLabelGenerator(empresa -> empresa.getId() + " - " + empresa.getDescricao());
-        
-        if (usuarioSessao.getEmpresaAtiva()!=null) {
-        	comboEmpresa.setValue(usuarioSessao.getEmpresaAtiva());
+
+        if (usuarioSessao.getEmpresaAtiva() != null) {
+            comboEmpresa.setValue(usuarioSessao.getEmpresaAtiva());
         }
-        
-        comboEmpresa.addValueChangeListener(_->{
-        	usuarioSessao.setEmpresaAtiva(comboEmpresa.getValue());
-        	Notification.show("Empresa ("+usuarioSessao.getEmpresaAtiva().getId()+") selecionada!");
+
+        comboEmpresa.addValueChangeListener(_ -> {
+            if (comboEmpresa.getValue() != null) {
+                usuarioSessao.setEmpresaAtiva(comboEmpresa.getValue());
+                Notification.show("Empresa (" + usuarioSessao.getEmpresaAtiva().getId() + ") selecionada!");
+            }
         });
-        
+
         headerLayout.add(comboEmpresa);
-        
         addToNavbar(true, headerLayout);
     }
 
@@ -101,91 +107,61 @@ public class MainLayout extends AppLayout {
         appName.addClassNames(LumoUtility.FontWeight.SEMIBOLD, LumoUtility.FontSize.MEDIUM, LumoUtility.Padding.MEDIUM);
         appName.setWidthFull();
         appName.getStyle().set("text-align", "center");
-        
-        
-        // Adiciona o título e logo em seguida o menu de navegação no Drawer
+
         addToDrawer(appName, createNavigation());
     }
-    
+
     private SideNav createNavigation() {
         SideNav navSideBar = new SideNav();
         navSideBar.setWidthFull();
 
-        SideNavItem inicioItem = new SideNavItem("Início");
-	        inicioItem.getElement().addEventListener("click", _-> {
-	            openNewInstance(ProgramId.HOME, ProgramParams.empty());
-	        }
-	    );
-        navSideBar.addItem(inicioItem);
+        for (ModuloDef modulo : programRegistry.getModulos()) {
+            if ("Geral".equals(modulo.modulo())) {
+                modulo.programas().forEach(p -> navSideBar.addItem(criarItem(p)));
+            } else {
+                SideNavItem moduloItem = new SideNavItem(modulo.modulo());
+                modulo.programas().forEach(p -> moduloItem.addItem(criarItem(p)));
+                navSideBar.addItem(moduloItem);
+            }
+        }
 
-        /*------ Módulo de Operador -----*/
-        
-        SideNavItem operadorModulo = new SideNavItem("Operador");
-
-        SideNavItem cadastroOperadorItem = new SideNavItem("Cadastro Operador");
-        cadastroOperadorItem.getElement().addEventListener("click", _-> {
-            openNewInstance(ProgramId.CADASTRO_OPERADOR, ProgramParams.empty());
-        });
-
-        SideNavItem consultaOperadorItem = new SideNavItem("Consulta Operadores");
-        consultaOperadorItem.getElement().addEventListener("click", _-> {
-        	openNewInstance(ProgramId.CONSULTA_OPERADOR, ProgramParams.empty());
-        });
-
-        operadorModulo.addItem(cadastroOperadorItem, consultaOperadorItem);
-        navSideBar.addItem(operadorModulo);
-        
-        /*------ Módulo de Empresa -----*/
-        
-        SideNavItem empresaModulo = new SideNavItem("Empresa");
-        SideNavItem cadastroEmpresaItem = new SideNavItem("Cadastro Empresa");
-        cadastroEmpresaItem.getElement().addEventListener("click", _-> {
-        	openNewInstance(ProgramId.CADASTRO_EMPRESA, ProgramParams.empty());
-        });
-        
-        empresaModulo.addItem(cadastroEmpresaItem);
-        navSideBar.addItem(empresaModulo);
-        
-        /*------ Módulo de Item -----*/
-        
-        SideNavItem itemModulo = new SideNavItem("Item");
-        SideNavItem cadastroItem = new SideNavItem("Cadastro de Item");
-        cadastroItem.getElement().addEventListener("click", _-> {
-        	openNewInstance(ProgramId.CADASTRO_ITEM, ProgramParams.empty());
-        });
-        
-        SideNavItem consultaItem = new SideNavItem("Consulta de Item");
-        consultaItem.getElement().addEventListener("click", _-> {
-        	openNewInstance(ProgramId.CONSULTA_ITEM, ProgramParams.empty());
-        });
-        
-        
-        itemModulo.addItem(cadastroItem,consultaItem);
-        navSideBar.addItem(itemModulo);
-        
         return navSideBar;
     }
-    
-    public void openNewInstance(ProgramId programId, ProgramParams params) {
-        Span titulo = new Span(programId.getTitulo());
-        
+
+    private SideNavItem criarItem(ProgramaDef programa) {
+        SideNavItem item = new SideNavItem(programa.titulo());
+        item.getElement().addEventListener("click", _ ->
+                openNewInstance(programa.id(), ProgramParams.empty())
+        );
+        return item;
+    }
+
+    public void openNewInstance(String programaId, ProgramParams params) {
+        ProgramaDef programaDef;
+        try {
+            programaDef = programRegistry.get(programaId);
+        } catch (IllegalArgumentException e) {
+            Notification.show("Programa não encontrado: " + programaId);
+            return;
+        }
+
+        Span titulo = new Span(programaDef.titulo());
+
         Button btnFechar = new Button(VaadinIcon.CLOSE_SMALL.create());
         btnFechar.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_ICON);
         btnFechar.getStyle().set("font-size", "12px").set("margin-left", "8px");
-        
+
         HorizontalLayout tabContent = new HorizontalLayout(titulo, btnFechar);
         tabContent.setAlignItems(FlexComponent.Alignment.CENTER);
         tabContent.setSpacing(false);
-        
+
         Tab tab = new Tab(tabContent);
-        
-        // Gambi para obrigar front-side fechar atela
-        btnFechar.getElement().executeJs("$0.addEventListener('click', e => e.stopPropagation());");
-        btnFechar.addClickListener(_-> {
-            closeInstance(tab);
-        });
-        
-        InstanceProgram instanceProgram = new InstanceProgram(programId, params, tab);
+
+        btnFechar.getElement().addEventListener("click", _ -> closeInstance(tab))
+                .addEventData("event.stopPropagation()");
+
+        // Instancia a abas empilhadas usando a nova assinatura do construtor
+        InstanceProgram instanceProgram = new InstanceProgram(programRegistry, programaId, params, tab);
 
         instances.put(tab, instanceProgram);
         instanceTabs.add(tab);
@@ -200,8 +176,11 @@ public class MainLayout extends AppLayout {
         }
         int index = instanceTabs.indexOf(tab);
         instanceTabs.remove(tab);
+
         if (!instances.isEmpty()) {
-            instanceTabs.setSelectedIndex(Math.max(0, index - 1));
+            int nextIndex = Math.max(0, index - 1);
+            Tab nextTab = (Tab) instanceTabs.getComponentAt(nextIndex);
+            instanceTabs.setSelectedTab(nextTab);
         } else {
             instanceContentArea.removeAll();
         }

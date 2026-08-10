@@ -1,6 +1,6 @@
 package com.minitextil.erp.operador.view;
 
-import com.minitextil.erp.components.core.Program;
+import com.minitextil.erp.components.core.program.Program;
 import com.minitextil.erp.components.grid.GridComponent;
 import com.minitextil.erp.components.grid.TipoColunas;
 import com.minitextil.erp.operador.model.Operador;
