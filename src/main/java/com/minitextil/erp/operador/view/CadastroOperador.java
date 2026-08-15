@@ -1,6 +1,6 @@
 package com.minitextil.erp.operador.view;
 
-import com.minitextil.erp.components.core.Program;
+import com.minitextil.erp.components.core.program.Program;
 import com.minitextil.erp.empresa.model.Empresa;
 import com.minitextil.erp.empresa.repository.EmpresaRepository;
 import com.minitextil.erp.operador.model.Operador;
@@ -39,7 +39,7 @@ public class CadastroOperador extends VerticalLayout implements Program {
 
     private final EmpresaRepository empresaRepository;
     
-    private final IntegerField id = new IntegerField("Código (Deixe vazio para novo)");
+    private final IntegerField id = new IntegerField("Código");
     private final Button btObter = new Button(new Icon(VaadinIcon.SEARCH));
     
     private final TextField nome = new TextField("Nome");

@@ -2,7 +2,7 @@ package com.minitextil.erp.empresa.view;
 
 import java.util.Optional;
 
-import com.minitextil.erp.components.core.Program;
+import com.minitextil.erp.components.core.program.Program;
 import com.minitextil.erp.empresa.model.Empresa;
 import com.minitextil.erp.empresa.repository.EmpresaRepository;
 import com.minitextil.erp.empresa.service.EmpresaService;

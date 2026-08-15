@@ -2,7 +2,7 @@ package com.minitextil.erp.item.view;
 
 import java.util.List;
 
-import com.minitextil.erp.components.core.ProgramErp;
+import com.minitextil.erp.components.core.program.ProgramErp;
 import com.minitextil.erp.components.grid.GridComponent;
 import com.minitextil.erp.components.grid.TipoColunas;
 import com.minitextil.erp.item.model.Item;
