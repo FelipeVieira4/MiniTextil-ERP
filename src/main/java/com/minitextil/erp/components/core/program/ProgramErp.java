@@ -1,12 +1,10 @@
-package com.minitextil.erp.components.core;
+package com.minitextil.erp.components.core.program;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 
 public class ProgramErp extends VerticalLayout implements Program {
-    private static final long serialVersionUID = 1L;
-
     public ProgramErp() {}
 
     @Override

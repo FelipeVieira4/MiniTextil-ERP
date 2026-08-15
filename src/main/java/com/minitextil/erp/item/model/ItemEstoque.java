@@ -4,7 +4,7 @@ import com.minitextil.erp.empresa.model.Empresa;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "item_estoque")
+@Table(name = "TBL_ITEM_ESTOQUE")
 public class ItemEstoque {
 
     @EmbeddedId
@@ -20,8 +20,10 @@ public class ItemEstoque {
     @JoinColumn(name = "item_id")
     private Item item;
 
-    private boolean controlaFornecedor;
-    private boolean controlaLote;
+    private Boolean controlaFornecedor;
+    private Boolean controlaLote;
+    private Integer estoqueMinimo;
+    private Integer estoqueMaximo;
 
     public ItemEstoqueId getId() {
         return id;

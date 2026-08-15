@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name="item")
+@Table(name="TBL_ITEM")
 public class Item {
 
 	@Id
@@ -25,6 +25,10 @@ public class Item {
 	
 	@NotNull(message = "Unidade do produto obrigátorio!")
 	private UnidadeMedida unidade;
+
+	private Item itemPai;
+
+	private VarianteItem varianteItem;
 
 	public Long getId() {
 		return id;
