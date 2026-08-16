@@ -14,11 +14,11 @@ public class VarianteItem {
     @NotBlank(message = "Descrição da variante é obrigatório!")
     private String descricao;
 
-    @NotBlank(message = "Cor hexadecimal da variante é obrigatório!")
+    //@NotBlank(message = "Cor hexadecimal da variante é obrigatório!")
     private String hexaCor;
 
     @NotNull(message = "Situação da variante é obrigatório!")
-    private Boolean situacao;
+    private Boolean ativo;
 
     public Long getId() {
         return id;
@@ -42,5 +42,13 @@ public class VarianteItem {
 
     public void setHexaCor(String hexaCor) {
         this.hexaCor = hexaCor;
+    }
+
+    public Boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
     }
 }
