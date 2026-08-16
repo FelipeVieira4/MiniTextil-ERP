@@ -5,18 +5,23 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "TBL_ITEM_SKU")
 public class ItemSku {
+
     @EmbeddedId
     private ItemSkuId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("itemPai")
-    @JoinColumn(name = "itemPai")
+    @JoinColumn(name = "item_pai_id")
     private Item itemPai;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("varianteId")
-    @JoinColumn(name = "varianteId")
+    @JoinColumn(name = "variante_id")
     private VarianteItem variante;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(unique = true)
+    private Item itemReduzido;
 
     public ItemSkuId getId() {
         return id;
@@ -40,5 +45,13 @@ public class ItemSku {
 
     public void setVariante(VarianteItem variante) {
         this.variante = variante;
+    }
+
+    public Item getItemReduzido() {
+        return itemReduzido;
+    }
+
+    public void setItemReduzido(Item itemReduzido) {
+        this.itemReduzido = itemReduzido;
     }
 }

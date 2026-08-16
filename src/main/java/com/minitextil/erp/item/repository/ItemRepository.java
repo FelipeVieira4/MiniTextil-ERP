@@ -7,5 +7,4 @@ import com.minitextil.erp.item.model.Item;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
-
 }

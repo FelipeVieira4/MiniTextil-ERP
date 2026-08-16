@@ -6,6 +6,6 @@ import java.io.Serializable;
 
 @Embeddable
 public record ItemSkuId(
-        Long itemId,
+        Long itemPai,
         Long varianteId
-) implements Serializable {};
+) implements Serializable {}
