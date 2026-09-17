@@ -21,3 +21,9 @@ spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
 
 server.port=8080
+
+# uma vez inicializado, remover essas linhas
+app.admin-user.createNewUser=true
+app.admin-user.name=Usuário Adiministração
+app.admin-user.loginName=userAdmin
+app.admin-user.password=uomx
