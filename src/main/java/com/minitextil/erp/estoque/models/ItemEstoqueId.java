@@ -1,4 +1,4 @@
-package com.minitextil.erp.item.model;
+package com.minitextil.erp.estoque.models;
 
 import jakarta.persistence.Embeddable;
 

@@ -5,7 +5,6 @@ import java.util.Optional;
 import com.minitextil.erp.components.core.program.*;
 import com.minitextil.erp.item.repository.VarianteRepository;
 import com.minitextil.erp.item.model.VarianteItem;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -28,7 +27,6 @@ public class CadastroVariante extends ProgramErp {
     private final VarianteRepository repository;
 
     private final IntegerField id = new IntegerField("Código");
-    private final Button btObter = new Button(new Icon(VaadinIcon.SEARCH));
 
     private final TextField descricao = new TextField("Descrição");
     private final Checkbox ativo = new Checkbox("Ativo");
@@ -52,7 +50,8 @@ public class CadastroVariante extends ProgramErp {
         binder.forField(codHexa)
                 .bind(VarianteItem::getHexaCor, VarianteItem::setHexaCor);
 
-        HorizontalLayout idCampo = new HorizontalLayout(id,btObter);
+        Button btObter = new Button(new Icon(VaadinIcon.SEARCH));
+        HorizontalLayout idCampo = new HorizontalLayout(id, btObter);
         idCampo.setDefaultVerticalComponentAlignment(HorizontalLayout.Alignment.BASELINE);
         idCampo.setWidthFull();
 
@@ -65,7 +64,7 @@ public class CadastroVariante extends ProgramErp {
             else limparFormulario();
         });
 
-        codHexa.addValueChangeListener(event -> {
+        codHexa.addValueChangeListener(_ -> {
             campoCor.getStyle().set("background", codHexa.getValue());
         });
 
@@ -165,14 +164,5 @@ public class CadastroVariante extends ProgramErp {
         ativo.setValue(true);
         codHexa.clear();
         //campoCor.getStyle().set("background", "");
-    }
-
-    @Override
-    public Component getView() {
-        return this;
-    }
-
-    @Override
-    public void onOpen(ProgramParams params, ProgramContext context) {
     }
 }

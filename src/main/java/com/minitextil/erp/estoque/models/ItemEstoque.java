@@ -1,6 +1,7 @@
-package com.minitextil.erp.item.model;
+package com.minitextil.erp.estoque.models;
 
 import com.minitextil.erp.empresa.model.Empresa;
+import com.minitextil.erp.item.model.Item;
 import jakarta.persistence.*;
 
 @Entity

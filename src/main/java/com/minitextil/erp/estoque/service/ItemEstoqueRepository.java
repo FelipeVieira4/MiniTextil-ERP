@@ -1,7 +1,7 @@
-package com.minitextil.erp.item.repository;
+package com.minitextil.erp.estoque.service;
 
-import com.minitextil.erp.item.model.ItemEstoque;
-import com.minitextil.erp.item.model.ItemEstoqueId;
+import com.minitextil.erp.estoque.models.ItemEstoque;
+import com.minitextil.erp.estoque.models.ItemEstoqueId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
