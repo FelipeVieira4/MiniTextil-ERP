@@ -2,10 +2,11 @@ package com.minitextil.erp.item.view;
 
 import java.util.Optional;
 
-import com.minitextil.erp.components.core.program.ProgramErp;
+import com.minitextil.erp.components.core.program.*;
 import com.minitextil.erp.item.model.Item;
 import com.minitextil.erp.item.model.UnidadeMedida;
 import com.minitextil.erp.item.repository.ItemRepository;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -17,6 +18,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
@@ -24,8 +26,6 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
 public class CadastroItem extends ProgramErp {
-    private static final long serialVersionUID = 1L;
-    
 	private final Binder<Item> binder = new BeanValidationBinder<>(Item.class);
     private final ItemRepository repository;
 
@@ -36,10 +36,12 @@ public class CadastroItem extends ProgramErp {
     private final Checkbox ativo = new Checkbox("Ativo");
     private final ComboBox<UnidadeMedida> unidade = new ComboBox<>("Unidade");
 
+    Button btEstoqueItem = new Button("Estoque");
+
+    private ProgramContext context;
 
     public CadastroItem(ItemRepository repository) {
         this.repository = repository;
-        
         
         this.setWidthFull();
         this.setAlignItems(Alignment.CENTER); 
@@ -70,8 +72,10 @@ public class CadastroItem extends ProgramErp {
             Integer idDigitado = event.getValue();
             if (idDigitado != null) {
                 MostrarDadosItem(idDigitado.longValue());
+                btEstoqueItem.setEnabled(true);
             } else {
                 limparFormulario();
+                btEstoqueItem.setEnabled(false);
             }
         });
 
@@ -96,6 +100,21 @@ public class CadastroItem extends ProgramErp {
         botoes.add(btSalvar);
         botoes.add(btExcluir);
         */
+
+
+        HorizontalLayout botoesOpcoes = new HorizontalLayout();
+
+        btEstoqueItem.addClickListener(_->{
+            ProgramParams paramEstItem = new ProgramParams();
+            paramEstItem.set("idItem",id.getValue().longValue());
+
+            context.openProgram("CONTROLE_ESTOQUE_ITEM",paramEstItem);
+        });
+        btEstoqueItem.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        btEstoqueItem.setEnabled(false);
+
+        botoesOpcoes.add(btEstoqueItem);
+
         
         Button btSalvar = new Button("Salvar", _-> salvar());
         btSalvar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -104,8 +123,8 @@ public class CadastroItem extends ProgramErp {
         formLayout.setWidth("50vw");
         formLayout.setRowSpacing("25px");
         
-        formLayout.add(idCampo, new Div(), descricao, ativo, unidade, new Div(), btSalvar);
-        
+        formLayout.add(idCampo, new Div(), descricao, ativo, unidade, new Div(), botoesOpcoes,new Div(), btSalvar);
+
         add(formLayout);
     }
     
@@ -175,5 +194,15 @@ public class CadastroItem extends ProgramErp {
         descricao.clear();
         ativo.setValue(true);
         unidade.clear();
+    }
+
+    @Override
+    public Component getView() {
+        return this;
+    }
+
+    @Override
+    public void onOpen(ProgramParams params, ProgramContext context) {
+        this.context = context;
     }
 }

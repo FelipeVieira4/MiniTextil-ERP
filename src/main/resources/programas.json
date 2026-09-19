@@ -38,9 +38,20 @@
         "viewClassName": "com.minitextil.erp.item.view.ConsultaItem"
       },
       {
-        "id": "TESTE_MAIN",
-        "titulo": "Teste Main",
-        "viewClassName": "com.minitextil.erp.item.view.TesteMain"
+        "id": "CONTROLE_ESTOQUE_ITEM",
+        "show": false,
+        "titulo": "Controle de Estoque do Item",
+        "viewClassName": "com.minitextil.erp.item.view.ControleEstoqueItem"
+      },
+      {
+        "id": "CADASTRO_VARIANTE",
+        "titulo": "Controle de Variante",
+        "viewClassName": "com.minitextil.erp.item.view.CadastroVariante"
+      },
+      {
+        "id": "CADASTRO_ITEM_SKU",
+        "titulo": "Controle de Itens Sku",
+        "viewClassName": "com.minitextil.erp.item.view.CadastroItemSku"
       }
     ]
   }

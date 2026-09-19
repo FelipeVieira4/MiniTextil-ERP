@@ -1,9 +1,20 @@
 package com.minitextil.erp.components.core.program;
 
-public record ProgramaDef(String id, String titulo, String viewClassName) {
+public record ProgramaDef(String id, String titulo, String viewClassName, Boolean show) {
+
+    public ProgramaDef{
+        if (show==null){
+            show=true;
+        }
+    }
+
+    public Boolean isVisible(){
+        return show;
+    }
 
     @SuppressWarnings("unchecked")
     public Class<? extends Program> resolveViewClass() {
+
         try {
             Class<?> clazz = Class.forName(viewClassName);
             if (!Program.class.isAssignableFrom(clazz)) {

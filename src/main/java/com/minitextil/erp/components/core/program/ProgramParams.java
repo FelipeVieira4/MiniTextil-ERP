@@ -11,7 +11,7 @@ public class ProgramParams {
         return new ProgramParams();
     }
 
-    public ProgramParams with(String key, Object value) {
+    public ProgramParams set(String key, Object value) {
         values.put(key, value);
         return this;
     }

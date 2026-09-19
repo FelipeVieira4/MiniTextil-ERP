@@ -5,8 +5,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 
 public class ProgramErp extends VerticalLayout implements Program {
-    private static final long serialVersionUID = 1L;
-
     public ProgramErp() {}
 
     @Override

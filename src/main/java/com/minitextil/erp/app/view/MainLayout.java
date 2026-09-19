@@ -116,11 +116,19 @@ public class MainLayout extends AppLayout {
         navSideBar.setWidthFull();
 
         for (ModuloDef modulo : programRegistry.getModulos()) {
+            List<ProgramaDef> visiveis = modulo.programas().stream()
+                    .filter(ProgramaDef::isVisible)
+                    .toList();
+
+            if (visiveis.isEmpty()) {
+                continue;
+            }
+
             if ("Geral".equals(modulo.modulo())) {
-                modulo.programas().forEach(p -> navSideBar.addItem(criarItem(p)));
+                visiveis.forEach(p -> navSideBar.addItem(criarItem(p)));
             } else {
                 SideNavItem moduloItem = new SideNavItem(modulo.modulo());
-                modulo.programas().forEach(p -> moduloItem.addItem(criarItem(p)));
+                visiveis.forEach(p -> moduloItem.addItem(criarItem(p)));
                 navSideBar.addItem(moduloItem);
             }
         }
